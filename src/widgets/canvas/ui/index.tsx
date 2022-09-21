@@ -2,7 +2,7 @@ import {useEffect, useRef} from "react";
 import {applyFilter, drawCanvasObjects, useSelectObject} from "../lib";
 import {useAppSelector} from "shared/hooks";
 import {selectCanvasState} from "../model/canvasSlice";
-import useDragNDrop from "../lib/dragAndDrop";
+import useDragNDrop from "../lib/useDragAndDrop";
 import "./styles.css";
 
 interface CanvasProps
