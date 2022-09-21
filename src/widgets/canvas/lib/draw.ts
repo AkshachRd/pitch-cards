@@ -1,5 +1,5 @@
-import {Shapes, CanvasObject, CanvasObjectTypes, ArtObject} from "shared/types";
-import {isArtObject} from "shared/lib/typeGuards";
+import {ArtObject, CanvasObject, CanvasObjectTypes, ImageObject, Shapes, TextObject} from "shared/types";
+import {isArtObject, isImageObject, isTextObject} from "shared/lib/typeGuards";
 
 export const drawCanvasObjects = (ctx: CanvasRenderingContext2D,
                                   canvasWidth: number,
@@ -18,6 +18,18 @@ const drawCanvasObject = (ctx: CanvasRenderingContext2D, obj: CanvasObject) => {
             if (isArtObject(obj))
             {
                 drawArtObject(ctx, obj);
+            }
+            break;
+        case CanvasObjectTypes.Image:
+            if (isImageObject(obj))
+            {
+                drawImageObject(ctx, obj);
+            }
+            break;
+        case CanvasObjectTypes.Text:
+            if (isTextObject(obj))
+            {
+                drawTextObject(ctx, obj);
             }
             break;
     }
@@ -43,4 +55,15 @@ const drawArtObject = (ctx: CanvasRenderingContext2D, obj: ArtObject) => {
             ctx.fill();
             break;
     }
+}
+
+const drawImageObject = (ctx: CanvasRenderingContext2D, obj: ImageObject) => {
+    const img = new Image();
+    img.src = obj.source;
+    ctx.drawImage(img, obj.x, obj.y, obj.width, obj.height);
+}
+
+const drawTextObject = (ctx: CanvasRenderingContext2D, obj: TextObject) => {
+    ctx.font = `${obj.style} ${obj.fontSize}px ${obj.fontFamily}`;
+    ctx.fillText(obj.content, obj.x, obj.y, obj.width);
 }
