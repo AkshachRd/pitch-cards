@@ -13,4 +13,5 @@ export interface CanvasObject
     y: number;
     width: number;
     height: number;
+    selected: boolean;
 }

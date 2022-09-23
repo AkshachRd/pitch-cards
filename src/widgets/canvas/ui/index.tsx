@@ -1,9 +1,10 @@
 import {useEffect, useRef} from "react";
-import {applyFilter, drawCanvasObjects, useSelectObject} from "../lib";
+import {applyFilter, drawCanvasObjects} from "../lib";
 import {useAppSelector} from "shared/hooks";
 import {selectCanvasState} from "../model/canvasSlice";
 import useDragNDrop from "../lib/useDragAndDrop";
 import "./styles.css";
+import useSelectObject from "../lib/useSelectObject";
 
 interface CanvasProps
 {
@@ -18,7 +19,7 @@ export const Canvas = ({width, height}: CanvasProps) => {
     const filter = state.filter;
     const selectedObjectIndex = state.currentObjectIndex;
     const [mouseDown, mouseUp, mouseOut, mouseMove] = useDragNDrop(canvasObjects);
-    const [click] = useSelectObject(canvasObjects, selectedObjectIndex);
+    const [mouseDownSelect] = useSelectObject(canvasObjects, selectedObjectIndex);
 
     useEffect(() => {
         if (!canvasRef.current) throw new Error("canvasRef is not assigned");
@@ -26,9 +27,9 @@ export const Canvas = ({width, height}: CanvasProps) => {
         const context = canvasRef.current.getContext("2d");
         if (!context) throw new Error("Context is not assigned");
 
-        drawCanvasObjects(context, width, height, canvasObjects);
+        drawCanvasObjects(context, canvasObjects);
         applyFilter(context, filter, 0.7);
-    }, [width, height, canvasObjects, filter]);
+    }, [canvasObjects, filter]);
 
     return (
         <canvas
@@ -36,8 +37,7 @@ export const Canvas = ({width, height}: CanvasProps) => {
             ref={canvasRef}
             width={width}
             height={height}
-            onClick={click}
-            onMouseDown={mouseDown}
+            onMouseDown={(e) => {mouseDownSelect(e); mouseDown(e);}}
             onMouseUp={mouseUp}
             onMouseOut={mouseOut}
             onMouseMove={mouseMove}

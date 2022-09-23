@@ -13,6 +13,7 @@ const useCreateRect = () => {
         y: 0,
         width: 50,
         height: 50,
+        selected: false,
         color: "green",
         shape: Shapes.Rectangle
     };
@@ -26,6 +27,7 @@ const useCreateTriangle = () => {
         y: 0,
         width: 50,
         height: 50,
+        selected: false,
         color: "green",
         shape: Shapes.Triangle
     };
@@ -35,10 +37,11 @@ const useCreateCircle = () => {
     return {
         id: "" + Date.now(),
         type: CanvasObjectTypes.ArtObject,
-        x: 25,
-        y: 25,
+        x: 0,
+        y: 0,
         width: 50,
         height: 50,
+        selected: false,
         color: "green",
         shape: Shapes.Circle
     };
