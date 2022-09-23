@@ -1,0 +1,41 @@
+.dropdown
+{
+    display: flex;
+    column-gap: 20px;
+    width: 40vw;
+    height: 30vh;
+    background: lightgray;
+    position: absolute;
+    visibility: hidden;
+    list-style: none;
+    transform: translateX(-50%);;
+    padding: 20px;
+    top: calc(100% + 5px);
+    left: 50%;
+    border: 3px black solid;
+}
+
+.dropdown_show
+{
+    visibility: visible;
+    animation: dropin .2s cubic-bezier(.15,.8,.3,1.6);
+}
+
+.dropdown__button
+{
+    display: contents;
+    cursor: pointer;
+}
+
+@keyframes dropin
+{
+    0% {
+        transform: translateY(-6px) translateX(-50%);
+
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0) translateX(-50%);;
+        opacity: 1;
+    }
+}

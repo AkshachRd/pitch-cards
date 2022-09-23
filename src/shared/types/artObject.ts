@@ -10,5 +10,5 @@ export enum Shapes
 export interface ArtObject extends CanvasObject
 {
     color: string;
-    shape: Shapes   ;
+    shape: Shapes;
 }

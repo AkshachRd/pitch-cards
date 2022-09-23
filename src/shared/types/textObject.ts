@@ -1,6 +1,6 @@
 import {CanvasObject} from "./canvasObject";
 
-enum FontFamily {
+export enum FontFamily {
     Arial = "Arial, Helvetica, sans-serif",
     Verdana = "Verdana, sans-serif",
     Tahoma = "Tahoma, Verdana, sans-serif",
@@ -12,7 +12,7 @@ enum FontFamily {
     BrushScriptMT = "'Brush Script MT', cursive"
 }
 
-enum FontStyle {
+export enum FontStyle {
     Italic = "italic",
     Bold = 700
 }
