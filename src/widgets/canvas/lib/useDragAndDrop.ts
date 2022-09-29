@@ -1,34 +1,30 @@
 import {MouseEvent, useReducer, useState} from "react";
 import {CanvasObject} from "shared/types";
 import {useAppDispatch} from "shared/hooks";
-import {editCoords} from "../model/canvasSlice";
-import {isMouseInCanvasObject} from "shared/lib/canvas";
-
-type ObjIndex = number | null;
+import {editCoords, EditCoordsPayload, } from "../model/canvasSlice";
 
 const useDragNDrop = (objs: Array<CanvasObject>) => {
     const [dragging, toggleDragging] = useReducer((state) => !state, false);
-    const [currentObjIndex, setCurrentObjIndex] = useState<ObjIndex>(null);
-    const [coords, setCoords] = useState({x: 0, y: 0})
+    const [coords, setCoords] = useState({x: 0, y: 0});
     const dispatch = useAppDispatch();
 
     const mouseDown = (e: MouseEvent<HTMLCanvasElement>) => {
         e.preventDefault();
 
-        const rect = e.currentTarget.getBoundingClientRect();
         e.currentTarget.style.cursor = 'pointer';
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
         setCoords({x: e.clientX, y: e.clientY});
 
-        objs.forEach((obj, index) => {
-            if (isMouseInCanvasObject(clickX, clickY, obj))
+        let selected = false;
+        objs.forEach((obj) => {
+            if (obj.selected)
             {
-                setCurrentObjIndex(index);
-                toggleDragging();
-                return;
+                selected = true;
             }
-        })
+        });
+        if (selected)
+        {
+            toggleDragging();
+        }
     }
 
     const mouseUp = (e: MouseEvent<HTMLCanvasElement>) => {
@@ -56,14 +52,19 @@ const useDragNDrop = (objs: Array<CanvasObject>) => {
         const dx = mouseX - coords.x;
         const dy = mouseY - coords.y;
 
-        if (currentObjIndex == null) throw new Error('Draggable object is not assigned');
-        const currObj = objs[currentObjIndex];
-        dispatch(editCoords({id: currObj.id, x: currObj.x + dx, y: currObj.y + dy}));
+        const arr = objs.reduce<Array<EditCoordsPayload>>((filtered, obj, index) => {
+            if (obj.selected)
+            {
+                filtered.push({index, x: obj.x + dx, y: obj.y + dy});
+            }
+            return filtered;
+        }, []);
+        dispatch(editCoords(arr));
         setCoords({x: mouseX, y: mouseY});
     }
 
 
     return [mouseDown, mouseUp, mouseOut, mouseMove];
-}
+};
 
 export default useDragNDrop;

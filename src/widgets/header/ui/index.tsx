@@ -1,66 +1,22 @@
 import ColorPicker from "features/colorPicker";
-import {useAppDispatch, useAppSelector} from "shared/hooks";
-import {add, changeFilter, editColor, selectCanvasState} from "../../canvas/model/canvasSlice";
-import {ArtObject, CanvasObjectTypes, Filters, Shapes} from "../../../shared/types";
-import Menu from "../../../features/menu";
-import {IconNames} from "../../../shared/icons";
-
-const useCreateRect = () => {
-    return {
-        id: "" + Date.now(),
-        type: CanvasObjectTypes.ArtObject,
-        x: 0,
-        y: 0,
-        width: 50,
-        height: 50,
-        selected: false,
-        color: "green",
-        shape: Shapes.Rectangle
-    };
-};
-
-const useCreateTriangle = () => {
-    return {
-        id: "" + Date.now(),
-        type: CanvasObjectTypes.ArtObject,
-        x: 0,
-        y: 0,
-        width: 50,
-        height: 50,
-        selected: false,
-        color: "green",
-        shape: Shapes.Triangle
-    };
-};
-
-const useCreateCircle = () => {
-    return {
-        id: "" + Date.now(),
-        type: CanvasObjectTypes.ArtObject,
-        x: 0,
-        y: 0,
-        width: 50,
-        height: 50,
-        selected: false,
-        color: "green",
-        shape: Shapes.Circle
-    };
-};
+import {useAppDispatch} from "shared/hooks";
+import {add, changeFilter, editColor} from "../../canvas/model/canvasSlice";
+import {Filters} from "shared/types";
+import Menu from "features/menu";
+import {IconNames} from "shared/icons";
+import {v4 as uuid4v} from "uuid";
+import {createCircle, createRect, createTriangle} from "../../../shared/lib/canvas";
 
 const Header = () => {
     const dispatch = useAppDispatch();
-    const state = useAppSelector(selectCanvasState);
-    const rect = useCreateRect();
-    const triangle = useCreateTriangle();
-    const circle = useCreateCircle();
     const menuItems = [
         {
             iconName: IconNames.Rect,
             title: "Art Objects",
             dropdownButtons: [
-                {iconName: IconNames.Rect, color: "green", action: () => dispatch(add(rect))},
-                {iconName: IconNames.Triangle, color: "green", action: () => dispatch(add(triangle))},
-                {iconName: IconNames.Circle, color: "green", action: () => dispatch(add(circle))},
+                {iconName: IconNames.Rect, color: "green", action: () => dispatch(add(createRect(uuid4v())))},
+                {iconName: IconNames.Triangle, color: "green", action: () => dispatch(add(createTriangle(uuid4v())))},
+                {iconName: IconNames.Circle, color: "green", action: () => dispatch(add(createCircle(uuid4v())))},
             ]},
         {
             iconName: IconNames.Triangle,
@@ -75,18 +31,12 @@ const Header = () => {
             ]}
     ];
 
-    let currObj: ArtObject | null = null;
     let color = "#000000";
-    if (state.currentObjectIndex !== null)
-    {
-        currObj = state.objects[state.currentObjectIndex] as ArtObject;
-        color = currObj.color;
-    }
 
     return (
         <>
             <ColorPicker
-                disabled={!!currObj && currObj.type !== CanvasObjectTypes.ArtObject}
+                disabled={false}
                 value={color}
                 action={(color) => dispatch(editColor(color))}
             />

@@ -17,9 +17,8 @@ export const Canvas = ({width, height}: CanvasProps) => {
     const state = useAppSelector(selectCanvasState);
     const canvasObjects = state.objects;
     const filter = state.filter;
-    const selectedObjectIndex = state.currentObjectIndex;
     const [mouseDown, mouseUp, mouseOut, mouseMove] = useDragNDrop(canvasObjects);
-    const [mouseDownSelect] = useSelectObject(canvasObjects, selectedObjectIndex);
+    const [mouseDownSelect] = useSelectObject(canvasObjects);
 
     useEffect(() => {
         if (!canvasRef.current) throw new Error("canvasRef is not assigned");
