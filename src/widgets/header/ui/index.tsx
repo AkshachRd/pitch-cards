@@ -7,7 +7,12 @@ import {IconNames} from "shared/icons";
 import {v4 as uuid4v} from "uuid";
 import {createCircle, createRect, createTriangle} from "../../../shared/lib/canvas";
 
-const Header = () => {
+interface HeaderProps
+{
+    toggleSettings: () => void;
+}
+
+const Header = ({toggleSettings}: HeaderProps) => {
     const dispatch = useAppDispatch();
     const menuItems = [
         {
@@ -41,6 +46,7 @@ const Header = () => {
                 action={(color) => dispatch(editColor(color))}
             />
             <Menu menuItems={menuItems}/>
+            <button onClick={(e) => {e.preventDefault(); toggleSettings();}}>Settings</button>
         </>
     )
 }

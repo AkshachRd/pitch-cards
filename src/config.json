@@ -1,6 +1,11 @@
 {
   "canvas": {
     "defaultWidth": 800,
-    "defaultHeight": 600
+    "defaultHeight": 600,
+    "objects": {
+      "defaultWidth": 50,
+      "defaultHeight": 50,
+      "defaultColor": "#8806ce"
+    }
   }
 }
