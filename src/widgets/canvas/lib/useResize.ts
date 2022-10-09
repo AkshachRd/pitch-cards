@@ -1,7 +1,7 @@
 import {MouseEvent, useReducer, useState} from "react";
 import {CanvasObject} from "shared/types";
 import {useAppDispatch} from "shared/hooks";
-import {editCoordsByIndex, resize} from "../model/canvasSlice";
+import {changeScale, editCoordsByIndex, resize} from "../model/canvasSlice";
 import {isMouseInCorner} from "shared/lib/canvas";
 
 const useResize = (objs: Array<CanvasObject>) => {
@@ -67,6 +67,9 @@ const useResize = (objs: Array<CanvasObject>) => {
         objs.forEach((obj, index) => {
             if (!obj.selected) return;
 
+            const scaleX = obj.scale.x;
+            const scaleY = obj.scale.y;
+
             if (dragTL)
             {
                 const width = obj.width - dx;
@@ -75,14 +78,17 @@ const useResize = (objs: Array<CanvasObject>) => {
                 if (width < 0 && height < 0)
                 {
                     setDragCorner([false, false, false, true]);
+                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY * -1}));
                 }
                 else if (width < 0)
                 {
                     setDragCorner([false, false, true, false]);
+                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY}));
                 }
                 else if (height < 0)
                 {
                     setDragCorner([false, true, false, false]);
+                    dispatch(changeScale({index, x: scaleX, y: scaleY * -1}));
                 }
                 else
                 {
@@ -98,14 +104,17 @@ const useResize = (objs: Array<CanvasObject>) => {
                 if (width < 0 && height < 0)
                 {
                     setDragCorner([false, true, false, false]);
+                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY * -1}));
                 }
                 else if (width < 0)
                 {
                     setDragCorner([true, false, false, false]);
+                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY}));
                 }
                 else if (height < 0)
                 {
                     setDragCorner([false, false, false, true]);
+                    dispatch(changeScale({index, x: scaleX, y: scaleY * -1}));
                 }
                 else
                 {
@@ -121,14 +130,17 @@ const useResize = (objs: Array<CanvasObject>) => {
                 if (width < 0 && height < 0)
                 {
                     setDragCorner([false, false, true, false]);
+                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY * -1}));
                 }
                 else if (width < 0)
                 {
                     setDragCorner([false, false, false, true]);
+                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY}));
                 }
                 else if (height < 0)
                 {
                     setDragCorner([true, false, false, false]);
+                    dispatch(changeScale({index, x: scaleX, y: scaleY * -1}));
                 }
                 else
                 {
@@ -144,14 +156,17 @@ const useResize = (objs: Array<CanvasObject>) => {
                 if (width < 0 && height < 0)
                 {
                     setDragCorner([true, false, false, false]);
+                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY * -1}));
                 }
                 else if (width < 0)
                 {
                     setDragCorner([false, true, false, false]);
+                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY}));
                 }
                 else if (height < 0)
                 {
                     setDragCorner([false, false, true, false]);
+                    dispatch(changeScale({index, x: scaleX, y: scaleY * -1}));
                 }
                 else
                 {

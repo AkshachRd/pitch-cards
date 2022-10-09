@@ -14,4 +14,5 @@ export interface CanvasObject
     width: number;
     height: number;
     selected: boolean;
+    scale: {x: number, y: number};
 }

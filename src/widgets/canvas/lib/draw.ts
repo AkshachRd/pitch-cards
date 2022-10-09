@@ -19,6 +19,28 @@ export const drawCanvasObjects = (ctx: CanvasRenderingContext2D,
 };
 
 const drawCanvasObject = (ctx: CanvasRenderingContext2D, obj: CanvasObject) => {
+    ctx.save();
+
+    const scaleX = obj.scale.x;
+    const scaleY = obj.scale.y;
+    if (scaleX !== 1 || scaleY !== 1)
+    {
+        if (scaleX < 0 && scaleY < 0)
+        {
+            ctx.translate(obj.x * 2 + obj.width, obj.y * 2 + obj.height);
+        }
+        else if (scaleX < 0)
+        {
+            ctx.translate(obj.x * 2 + obj.width, 0);
+        }
+        else if (scaleY < 0)
+        {
+            ctx.translate(0, obj.y * 2 + obj.height);
+        }
+
+        ctx.scale(scaleX, scaleY);
+    }
+
     switch (obj.type)
     {
         case CanvasObjectTypes.ArtObject:
@@ -40,6 +62,8 @@ const drawCanvasObject = (ctx: CanvasRenderingContext2D, obj: CanvasObject) => {
             }
             break;
     }
+
+    ctx.restore();
 };
 
 const drawArtObject = (ctx: CanvasRenderingContext2D, obj: ArtObject) => {

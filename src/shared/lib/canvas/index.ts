@@ -35,6 +35,7 @@ export const createRect = (id: string) => {
         width: 50,
         height: 50,
         selected: false,
+        scale: {x: 1, y: 1},
         color: "green",
         shape: Shapes.Rectangle
     };
@@ -49,6 +50,7 @@ export const createCircle = (id: string) => {
         width: 50,
         height: 50,
         selected: false,
+        scale: {x: 1, y: 1},
         color: "green",
         shape: Shapes.Circle
     };
@@ -63,6 +65,7 @@ export const createTriangle = (id: string) => {
         width: 50,
         height: 50,
         selected: false,
+        scale: {x: 1, y: 1},
         color: "green",
         shape: Shapes.Triangle
     };

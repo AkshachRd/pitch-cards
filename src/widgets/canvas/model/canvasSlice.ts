@@ -29,6 +29,13 @@ export interface ResizePayload
 type SelectPayload = Index;
 type DeselectPayload = Index;
 
+interface ChangeScalePayload
+{
+    index: number;
+    x: number;
+    y: number;
+}
+
 interface SetObjectSelectionByIdPayload
 {
     id: string;
@@ -114,6 +121,13 @@ export const canvasSlice = createSlice({
             {
                 obj.selected = false;
             }
+        },
+        changeScale: (state, action: PayloadAction<ChangeScalePayload>) => {
+            const obj = state.objects[action.payload.index];
+            if (obj)
+            {
+                obj.scale = {x: action.payload.x, y: action.payload.y};
+            }
         }
     }
 })
@@ -127,6 +141,7 @@ export const {
     editColor,
     deselectObjects,
     setObjectSelectionById,
+    changeScale,
     changeFilter,
     select,
     deselect
