@@ -1,10 +1,10 @@
 import {CanvasObject} from "shared/types";
 import {isMouseInCanvasObject} from "shared/lib/canvas";
-import {setObjectSelectionById} from "../model/canvasSlice";
+import {deselect, select} from "../model/canvasSlice";
 import {MouseEvent, useEffect, useState} from "react";
 import {useAppDispatch} from "shared/hooks";
 
-const useSelectObject = (objs: Array<CanvasObject>) => {
+const useSelect = (objs: Array<CanvasObject>) => {
     const dispatch = useAppDispatch();
     const [selectedIndexes, setSelectedIndexes] = useState<Array<number>>([]);
 
@@ -27,7 +27,7 @@ const useSelectObject = (objs: Array<CanvasObject>) => {
                     {
                         add(index);
                     }
-                    else
+                    else if (selectedIndexes.indexOf(index) <= -1)
                     {
                         setSelectedIndexes([index]);
                     }
@@ -43,12 +43,13 @@ const useSelectObject = (objs: Array<CanvasObject>) => {
     };
 
     useEffect(() => {
-        objs.forEach((obj, index) => {
-            dispatch(setObjectSelectionById({id: obj.id, selected: selectedIndexes.indexOf(index) > -1}));
+        objs.forEach((_, index) => {
+            selectedIndexes.indexOf(index) > -1 ?
+                dispatch(select(index)) : dispatch(deselect(index));
         });
     }, [selectedIndexes, objs, dispatch]);
 
     return [mouseDown]
 };
 
-export default useSelectObject;
+export default useSelect;

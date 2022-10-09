@@ -10,12 +10,24 @@ export interface CanvasState
     objects: Array<CanvasObject>;
 }
 
+type Index = number;
+
 export interface EditCoordsPayload
 {
-    index: number;
+    index: Index;
     x: number;
     y: number;
 }
+
+export interface ResizePayload
+{
+    index: Index;
+    width: number;
+    height: number;
+}
+
+type SelectPayload = Index;
+type DeselectPayload = Index;
 
 interface SetObjectSelectionByIdPayload
 {
@@ -26,14 +38,14 @@ interface SetObjectSelectionByIdPayload
 const initialState: CanvasState = {
     filter: Filters.None,
     objects: []
-}
+};
 
 export const canvasSlice = createSlice({
     name: 'canvas',
     initialState,
     reducers: {
         add: (state, action: PayloadAction<CanvasObject>) => {
-            state.objects.unshift(action.payload);
+            state.objects.push(action.payload);
         },
         remove: (state, action: PayloadAction<string>) => {
             state.objects = state.objects.filter((obj) => {
@@ -45,9 +57,29 @@ export const canvasSlice = createSlice({
         },
         editCoords: (state, action: PayloadAction<Array<EditCoordsPayload>>) => {
             action.payload.forEach(({index, x, y}) => {
-                state.objects[index].x = x;
-                state.objects[index].y = y;
+                const obj = state.objects[index];
+                if (obj)
+                {
+                    obj.x = x;
+                    obj.y = y;
+                }
             });
+        },
+        editCoordsByIndex: (state, action: PayloadAction<EditCoordsPayload>) => {
+            const obj = state.objects[action.payload.index];
+            if (obj)
+            {
+                obj.x = action.payload.x;
+                obj.y = action.payload.y;
+            }
+        },
+        resize: (state, action: PayloadAction<ResizePayload>) => {
+            const obj = state.objects[action.payload.index];
+            if (obj)
+            {
+                obj.width = action.payload.width;
+                obj.height = action.payload.height;
+            }
         },
         editColor: (state, action: PayloadAction<string>) => {
             state.objects.forEach((obj) => {
@@ -63,11 +95,42 @@ export const canvasSlice = createSlice({
             {
                 obj.selected = action.payload.selected;
             }
+        },
+        deselectObjects: (state) => {
+            state.objects.forEach((obj) => {
+                obj.selected = false;
+            });
+        },
+        select: (state, action: PayloadAction<SelectPayload>) => {
+            const obj = state.objects[action.payload];
+            if (obj)
+            {
+                obj.selected = true;
+            }
+        },
+        deselect: (state, action: PayloadAction<DeselectPayload>) => {
+            const obj = state.objects[action.payload];
+            if (obj)
+            {
+                obj.selected = false;
+            }
         }
     }
 })
 
-export const {add, remove, editCoords, editColor, setObjectSelectionById, changeFilter} = canvasSlice.actions;
+export const {
+    add,
+    remove,
+    editCoords,
+    editCoordsByIndex,
+    resize,
+    editColor,
+    deselectObjects,
+    setObjectSelectionById,
+    changeFilter,
+    select,
+    deselect
+} = canvasSlice.actions;
 export const selectCanvasObjects = (state: RootState) => state.canvas.objects;
 export const selectCanvasState = (state: RootState) => state.canvas;
 export const selectCanvasFilter = (state: RootState) => state.canvas.filter;

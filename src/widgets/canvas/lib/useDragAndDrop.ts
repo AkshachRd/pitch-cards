@@ -14,18 +14,11 @@ const useDragNDrop = (objs: Array<CanvasObject>) => {
         e.currentTarget.style.cursor = 'pointer';
         setCoords({x: e.clientX, y: e.clientY});
 
-        let selected = false;
-        objs.forEach((obj) => {
-            if (obj.selected)
-            {
-                selected = true;
-            }
-        });
-        if (selected)
+        if (objs.find((obj) => obj.selected))
         {
             toggleDragging();
         }
-    }
+    };
 
     const mouseUp = (e: MouseEvent<HTMLCanvasElement>) => {
         if (!dragging) return;
@@ -33,15 +26,9 @@ const useDragNDrop = (objs: Array<CanvasObject>) => {
         e.preventDefault();
         e.currentTarget.style.cursor = 'auto';
         toggleDragging();
-    }
+    };
 
-    const mouseOut = (e: MouseEvent<HTMLCanvasElement>) => {
-        if (!dragging) return;
-
-        e.preventDefault();
-        e.currentTarget.style.cursor = 'auto';
-        toggleDragging();
-    }
+    const mouseOut = mouseUp;
 
     const mouseMove = (e: MouseEvent<HTMLCanvasElement>) => {
         if (!dragging) return;
@@ -61,7 +48,7 @@ const useDragNDrop = (objs: Array<CanvasObject>) => {
         }, []);
         dispatch(editCoords(arr));
         setCoords({x: mouseX, y: mouseY});
-    }
+    };
 
 
     return [mouseDown, mouseUp, mouseOut, mouseMove];

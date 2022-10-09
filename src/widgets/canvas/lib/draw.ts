@@ -4,13 +4,16 @@ import {isArtObject, isImageObject, isTextObject} from "shared/lib/typeGuards";
 export const drawCanvasObjects = (ctx: CanvasRenderingContext2D,
                                   objs: Array<CanvasObject>) => {
     const pattern = [10, 10];
+    const cornerRadius = 5;
+    const cornerColor = "#000";
     const { width, height } = ctx.canvas.getBoundingClientRect();
     ctx.clearRect(0, 0, width, height);
     objs.forEach((obj) => {
         drawCanvasObject(ctx, obj);
         if (obj.selected)
         {
-            drawDashedLine(ctx, obj, pattern);
+            drawSelectionLines(ctx, obj, pattern);
+            drawDragCorners(ctx, obj, cornerRadius, cornerColor);
         }
     })
 };
@@ -69,10 +72,11 @@ const drawImageObject = (ctx: CanvasRenderingContext2D, obj: ImageObject) => {
 
 const drawTextObject = (ctx: CanvasRenderingContext2D, obj: TextObject) => {
     ctx.font = `${obj.style} ${obj.fontSize}px ${obj.fontFamily}`;
+    ctx.fillStyle = obj.color;
     ctx.fillText(obj.content, obj.x, obj.y, obj.width);
 };
 
-const drawDashedLine = (ctx: CanvasRenderingContext2D, obj: CanvasObject, pattern: Array<number>) => {
+const drawSelectionLines = (ctx: CanvasRenderingContext2D, obj: CanvasObject, pattern: Array<number>) => {
     ctx.beginPath();
     ctx.setLineDash(pattern);
     ctx.moveTo(obj.x, obj.y);
@@ -81,4 +85,24 @@ const drawDashedLine = (ctx: CanvasRenderingContext2D, obj: CanvasObject, patter
     ctx.lineTo(obj.x, obj.y + obj.height);
     ctx.lineTo(obj.x, obj.y);
     ctx.stroke();
+};
+
+const drawDragCorners = (ctx: CanvasRenderingContext2D, obj: CanvasObject, r: number, color: string) => {
+    ctx.fillStyle = color;
+
+    ctx.beginPath();
+    ctx.arc(obj.x, obj.y, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(obj.x, obj.y + obj.height, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(obj.x + obj.width, obj.y, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(obj.x + obj.width, obj.y + obj.height, r, 0, Math.PI * 2);
+    ctx.fill();
 };

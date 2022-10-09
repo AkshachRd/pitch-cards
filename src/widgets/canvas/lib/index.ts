@@ -1,4 +1,5 @@
 export * from "./draw";
 export * from "./useDragAndDrop";
-export * from "./useSelectObject";
+export * from "./useSelect";
 export * from "./filter";
+export * from "./useResize";

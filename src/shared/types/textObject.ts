@@ -22,5 +22,6 @@ export interface TextObject extends CanvasObject
     content: string;
     fontFamily: FontFamily;
     fontSize: number;
+    color: string;
     style: FontStyle;
 }
