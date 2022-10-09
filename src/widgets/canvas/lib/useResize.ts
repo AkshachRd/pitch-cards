@@ -2,14 +2,14 @@ import {MouseEvent, useReducer, useState} from "react";
 import {CanvasObject} from "shared/types";
 import {useAppDispatch} from "shared/hooks";
 import {editCoordsByIndex, resize} from "../model/canvasSlice";
+import {isMouseInCorner} from "shared/lib/canvas";
 
-const useResize = (objs: Array<CanvasObject>, closeEnough: number = 10) => {
+const useResize = (objs: Array<CanvasObject>) => {
     const dispatch = useAppDispatch();
     const [coords, setCoords] = useState({x: 0, y: 0});
     const [resizing, toggleResizing] = useReducer((state) => !state, false);
     const [[dragTL, dragBL, dragTR, dragBR], setDragCorner] = useState([false, false, false, false]); // TL BL TR BR
 
-    const checkCloseEnough = (closeEnough: number, p1: number, p2: number) => Math.abs(p1 - p2) < closeEnough;
     const selectedObjs = objs.filter((obj) => obj.selected);
 
     const mouseDown = (e: MouseEvent<HTMLCanvasElement>) => {
@@ -23,22 +23,22 @@ const useResize = (objs: Array<CanvasObject>, closeEnough: number = 10) => {
         const clickY = e.clientY - rect.top;
 
         selectedObjs.forEach((obj) => {
-            if (checkCloseEnough(closeEnough, clickX, obj.x) && checkCloseEnough(closeEnough, clickY, obj.y)) //dragTL
+            if (isMouseInCorner(clickX, clickY, obj.x, obj.y)) //dragTL
             {
                 setDragCorner([true, false, false, false]);
                 toggleResizing();
             }
-            else if (checkCloseEnough(closeEnough, clickX, obj.x) && checkCloseEnough(closeEnough, clickY, obj.y + obj.height)) //dragBL
+            else if (isMouseInCorner(clickX, clickY, obj.x, obj.y + obj.height)) //dragBL
             {
                 setDragCorner([false, true, false, false]);
                 toggleResizing();
             }
-            else if (checkCloseEnough(closeEnough, clickX, obj.x + obj.width) && checkCloseEnough(closeEnough, clickY, obj.y)) //dragTR
+            else if (isMouseInCorner(clickX, clickY, obj.x + obj.width, obj.y)) //dragTR
             {
                 setDragCorner([false, false, true, false]);
                 toggleResizing();
             }
-            else if (checkCloseEnough(closeEnough, clickX, obj.x + obj.width) && checkCloseEnough(closeEnough, clickY, obj.y + obj.height)) //dragBR
+            else if (isMouseInCorner(clickX, clickY, obj.x + obj.width, obj.y + obj.height)) //dragBR
             {
                 setDragCorner([false, false, false, true]);
                 toggleResizing();

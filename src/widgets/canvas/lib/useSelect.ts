@@ -1,5 +1,5 @@
 import {CanvasObject} from "shared/types";
-import {isMouseInCanvasObject} from "shared/lib/canvas";
+import {isMouseInCanvasObject, isMouseInCanvasObjectCorner} from "shared/lib/canvas";
 import {deselect, select} from "../model/canvasSlice";
 import {MouseEvent, useEffect, useState} from "react";
 import {useAppDispatch} from "shared/hooks";
@@ -32,6 +32,10 @@ const useSelect = (objs: Array<CanvasObject>) => {
                         setSelectedIndexes([index]);
                     }
                 }
+                selected = true;
+            }
+            else if (isMouseInCanvasObjectCorner(clickX, clickY, obj))
+            {
                 selected = true;
             }
         });
