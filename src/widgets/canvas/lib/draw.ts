@@ -4,7 +4,7 @@ import {isArtObject, isImageObject, isTextObject} from "shared/lib/typeGuards";
 export const drawCanvasObjects = (ctx: CanvasRenderingContext2D,
                                   objs: Array<CanvasObject>) => {
     const pattern = [10, 10];
-    const cornerRadius = 5;
+    const cornerSideLength = 10;
     const cornerColor = "#000";
     const { width, height } = ctx.canvas.getBoundingClientRect();
     ctx.clearRect(0, 0, width, height);
@@ -13,7 +13,7 @@ export const drawCanvasObjects = (ctx: CanvasRenderingContext2D,
         if (obj.selected)
         {
             drawSelectionLines(ctx, obj, pattern);
-            drawDragCorners(ctx, obj, cornerRadius, cornerColor);
+            drawDragCorners(ctx, obj, cornerSideLength, cornerColor);
         }
     })
 };
@@ -101,6 +101,8 @@ const drawTextObject = (ctx: CanvasRenderingContext2D, obj: TextObject) => {
 };
 
 const drawSelectionLines = (ctx: CanvasRenderingContext2D, obj: CanvasObject, pattern: Array<number>) => {
+    ctx.save();
+
     ctx.beginPath();
     ctx.setLineDash(pattern);
     ctx.moveTo(obj.x, obj.y);
@@ -109,24 +111,21 @@ const drawSelectionLines = (ctx: CanvasRenderingContext2D, obj: CanvasObject, pa
     ctx.lineTo(obj.x, obj.y + obj.height);
     ctx.lineTo(obj.x, obj.y);
     ctx.stroke();
+
+    ctx.restore();
 };
 
-const drawDragCorners = (ctx: CanvasRenderingContext2D, obj: CanvasObject, r: number, color: string) => {
+const drawDragCorners = (ctx: CanvasRenderingContext2D, obj: CanvasObject, side: number, color: string) => {
+    ctx.save();
+
+    const x = obj.x - side / 2;
+    const y = obj.y - side / 2;
+
     ctx.fillStyle = color;
+    ctx.fillRect(x, y, side, side);
+    ctx.fillRect(x, y + obj.height, side, side);
+    ctx.fillRect(x + obj.width, y, side, side);
+    ctx.fillRect(x + obj.width, y + obj.height, side, side);
 
-    ctx.beginPath();
-    ctx.arc(obj.x, obj.y, r, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(obj.x, obj.y + obj.height, r, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(obj.x + obj.width, obj.y, r, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(obj.x + obj.width, obj.y + obj.height, r, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.restore();
 };
