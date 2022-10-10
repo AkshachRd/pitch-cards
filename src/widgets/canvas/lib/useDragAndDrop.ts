@@ -2,6 +2,7 @@ import {MouseEvent, useReducer, useState} from "react";
 import {CanvasObject} from "shared/types";
 import {useAppDispatch} from "shared/hooks";
 import {editCoords, EditCoordsPayload, } from "../model/canvasSlice";
+import {isMouseInCanvasObject} from "../../../shared/lib/canvas";
 
 const useDragNDrop = (objs: Array<CanvasObject>) => {
     const [dragging, toggleDragging] = useReducer((state) => !state, false);
@@ -14,18 +15,15 @@ const useDragNDrop = (objs: Array<CanvasObject>) => {
         e.currentTarget.style.cursor = 'pointer';
         setCoords({x: e.clientX, y: e.clientY});
 
-        let selected = false;
-        objs.forEach((obj) => {
-            if (obj.selected)
-            {
-                selected = true;
-            }
-        });
-        if (selected)
+        const rect = e.currentTarget.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        if (objs.find((obj) => isMouseInCanvasObject(clickX, clickY, obj)))
         {
             toggleDragging();
         }
-    }
+    };
 
     const mouseUp = (e: MouseEvent<HTMLCanvasElement>) => {
         if (!dragging) return;
@@ -33,15 +31,9 @@ const useDragNDrop = (objs: Array<CanvasObject>) => {
         e.preventDefault();
         e.currentTarget.style.cursor = 'auto';
         toggleDragging();
-    }
+    };
 
-    const mouseOut = (e: MouseEvent<HTMLCanvasElement>) => {
-        if (!dragging) return;
-
-        e.preventDefault();
-        e.currentTarget.style.cursor = 'auto';
-        toggleDragging();
-    }
+    const mouseOut = mouseUp;
 
     const mouseMove = (e: MouseEvent<HTMLCanvasElement>) => {
         if (!dragging) return;
@@ -61,7 +53,7 @@ const useDragNDrop = (objs: Array<CanvasObject>) => {
         }, []);
         dispatch(editCoords(arr));
         setCoords({x: mouseX, y: mouseY});
-    }
+    };
 
 
     return [mouseDown, mouseUp, mouseOut, mouseMove];

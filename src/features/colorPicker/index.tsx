@@ -7,9 +7,15 @@ interface ColorPickerProps
 
 const ColorPicker = ({disabled, value, action}: ColorPickerProps) => {
     return (
-        <input disabled={disabled} type="color" value={value} onChange={(e) => {
-            action(e.target.value);
-        }}/>
+        <input
+            disabled={disabled}
+            id={"head"}
+            type="color"
+            value={value}
+            onChange={(e) => {
+                action(e.target.value);
+            }}
+        />
     )
 }
 

@@ -1,10 +1,11 @@
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, MouseEvent} from "react";
 import {applyFilter, drawCanvasObjects} from "../lib";
 import {useAppSelector} from "shared/hooks";
 import {selectCanvasState} from "../model/canvasSlice";
 import useDragNDrop from "../lib/useDragAndDrop";
 import "./styles.css";
-import useSelectObject from "../lib/useSelectObject";
+import useSelect from "../lib/useSelect";
+import useResize from "../lib/useResize";
 
 interface CanvasProps
 {
@@ -17,8 +18,30 @@ export const Canvas = ({width, height}: CanvasProps) => {
     const state = useAppSelector(selectCanvasState);
     const canvasObjects = state.objects;
     const filter = state.filter;
-    const [mouseDown, mouseUp, mouseOut, mouseMove] = useDragNDrop(canvasObjects);
-    const [mouseDownSelect] = useSelectObject(canvasObjects);
+    const [mouseDownDragNDrop, mouseUpDragNDrop, mouseOutDragNDrop, mouseMoveDragNDrop] = useDragNDrop(canvasObjects);
+    const [mouseDownResize, mouseUpResize, mouseOutResize, mouseMoveResize] = useResize(canvasObjects);
+    const [mouseDownSelect] = useSelect(canvasObjects);
+
+    const mouseDown = (e: MouseEvent<HTMLCanvasElement>) => {
+        mouseDownSelect(e);
+        mouseDownDragNDrop(e);
+        mouseDownResize(e);
+    };
+
+    const mouseUp = (e: MouseEvent<HTMLCanvasElement>) => {
+        mouseUpDragNDrop(e);
+        mouseUpResize(e);
+    };
+
+    const mouseOut = (e: MouseEvent<HTMLCanvasElement>) => {
+          mouseOutDragNDrop(e);
+          mouseOutResize(e);
+    };
+
+    const mouseMove = (e: MouseEvent<HTMLCanvasElement>) => {
+        mouseMoveDragNDrop(e);
+        mouseMoveResize(e);
+    };
 
     useEffect(() => {
         if (!canvasRef.current) throw new Error("canvasRef is not assigned");
@@ -31,15 +54,16 @@ export const Canvas = ({width, height}: CanvasProps) => {
     }, [canvasObjects, filter]);
 
     return (
-        <canvas
-            className="canvas"
-            ref={canvasRef}
-            width={width}
-            height={height}
-            onMouseDown={(e) => {mouseDownSelect(e); mouseDown(e);}}
-            onMouseUp={mouseUp}
-            onMouseOut={mouseOut}
-            onMouseMove={mouseMove}
-        />
+        <div className="canvas">
+            <canvas
+                ref={canvasRef}
+                width={width}
+                height={height}
+                onMouseDown={mouseDown}
+                onMouseUp={mouseUp}
+                onMouseOut={mouseOut}
+                onMouseMove={mouseMove}
+            />
+        </div>
     )
 }

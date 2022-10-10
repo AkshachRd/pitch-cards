@@ -5,7 +5,7 @@ import {Filters} from "shared/types";
 import Menu from "features/menu";
 import {IconNames} from "shared/icons";
 import {v4 as uuid4v} from "uuid";
-import {createCircle, createRect, createTriangle} from "../../../shared/lib/canvas";
+import {createCircle, createRect, createTriangle} from "shared/lib/canvas";
 
 interface HeaderProps
 {

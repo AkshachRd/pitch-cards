@@ -4,18 +4,43 @@ import {isArtObject, isImageObject, isTextObject} from "shared/lib/typeGuards";
 export const drawCanvasObjects = (ctx: CanvasRenderingContext2D,
                                   objs: Array<CanvasObject>) => {
     const pattern = [10, 10];
+    const cornerSideLength = 10;
+    const cornerColor = "#000";
     const { width, height } = ctx.canvas.getBoundingClientRect();
     ctx.clearRect(0, 0, width, height);
     objs.forEach((obj) => {
         drawCanvasObject(ctx, obj);
         if (obj.selected)
         {
-            drawDashedLine(ctx, obj, pattern);
+            drawSelectionLines(ctx, obj, pattern);
+            drawDragCorners(ctx, obj, cornerSideLength, cornerColor);
         }
     })
 };
 
 const drawCanvasObject = (ctx: CanvasRenderingContext2D, obj: CanvasObject) => {
+    ctx.save();
+
+    const scaleX = obj.scale.x;
+    const scaleY = obj.scale.y;
+    if (scaleX !== 1 || scaleY !== 1)
+    {
+        if (scaleX < 0 && scaleY < 0)
+        {
+            ctx.translate(obj.x * 2 + obj.width, obj.y * 2 + obj.height);
+        }
+        else if (scaleX < 0)
+        {
+            ctx.translate(obj.x * 2 + obj.width, 0);
+        }
+        else if (scaleY < 0)
+        {
+            ctx.translate(0, obj.y * 2 + obj.height);
+        }
+
+        ctx.scale(scaleX, scaleY);
+    }
+
     switch (obj.type)
     {
         case CanvasObjectTypes.ArtObject:
@@ -37,6 +62,8 @@ const drawCanvasObject = (ctx: CanvasRenderingContext2D, obj: CanvasObject) => {
             }
             break;
     }
+
+    ctx.restore();
 };
 
 const drawArtObject = (ctx: CanvasRenderingContext2D, obj: ArtObject) => {
@@ -69,10 +96,13 @@ const drawImageObject = (ctx: CanvasRenderingContext2D, obj: ImageObject) => {
 
 const drawTextObject = (ctx: CanvasRenderingContext2D, obj: TextObject) => {
     ctx.font = `${obj.style} ${obj.fontSize}px ${obj.fontFamily}`;
+    ctx.fillStyle = obj.color;
     ctx.fillText(obj.content, obj.x, obj.y, obj.width);
 };
 
-const drawDashedLine = (ctx: CanvasRenderingContext2D, obj: CanvasObject, pattern: Array<number>) => {
+const drawSelectionLines = (ctx: CanvasRenderingContext2D, obj: CanvasObject, pattern: Array<number>) => {
+    ctx.save();
+
     ctx.beginPath();
     ctx.setLineDash(pattern);
     ctx.moveTo(obj.x, obj.y);
@@ -81,4 +111,21 @@ const drawDashedLine = (ctx: CanvasRenderingContext2D, obj: CanvasObject, patter
     ctx.lineTo(obj.x, obj.y + obj.height);
     ctx.lineTo(obj.x, obj.y);
     ctx.stroke();
+
+    ctx.restore();
+};
+
+const drawDragCorners = (ctx: CanvasRenderingContext2D, obj: CanvasObject, side: number, color: string) => {
+    ctx.save();
+
+    const x = obj.x - side / 2;
+    const y = obj.y - side / 2;
+
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, side, side);
+    ctx.fillRect(x, y + obj.height, side, side);
+    ctx.fillRect(x + obj.width, y, side, side);
+    ctx.fillRect(x + obj.width, y + obj.height, side, side);
+
+    ctx.restore();
 };
