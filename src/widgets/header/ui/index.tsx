@@ -1,4 +1,5 @@
 import ColorPicker from "features/colorPicker";
+import {ReactNode} from "react";
 import {useAppDispatch} from "shared/hooks";
 import {add, changeFilter, editColor} from "../../canvas/model/canvasSlice";
 import {Filters} from "shared/types";
@@ -9,10 +10,10 @@ import {createCircle, createRect, createTriangle} from "shared/lib/canvas";
 
 interface HeaderProps
 {
-    toggleSettings: () => void;
+    children: ReactNode;
 }
 
-const Header = ({toggleSettings}: HeaderProps) => {
+const Header = ({children}: HeaderProps) => {
     const dispatch = useAppDispatch();
     const menuItems = [
         {
@@ -46,7 +47,7 @@ const Header = ({toggleSettings}: HeaderProps) => {
                 action={(color) => dispatch(editColor(color))}
             />
             <Menu menuItems={menuItems}/>
-            <button onClick={(e) => {e.preventDefault(); toggleSettings();}}>Settings</button>
+            {children}
         </>
     )
 }

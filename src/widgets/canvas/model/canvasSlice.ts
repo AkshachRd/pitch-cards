@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {CanvasObject} from "shared/types/canvasObject";
 import {RootState} from "app/store";
 import {Filters} from "shared/types";
-import {isArtObject} from "../../../shared/lib/typeGuards";
+import {isArtObject} from "shared/lib/typeGuards";
 
 export interface CanvasState
 {
