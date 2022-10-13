@@ -1,12 +1,14 @@
 import Rect from "./rect";
 import Triangle from "./triangle";
 import Circle from "./circle";
+import Cross from "./cross";
 
 export enum IconNames
 {
-    Rect = "rect",
-    Triangle = "triangle",
-    Circle = "circle",
+    Rect = "RECTANGLE",
+    Triangle = "TRIANGLE",
+    Circle = "CIRCLE",
+    Cross = "CROSS",
 }
 
 interface IconProps
@@ -26,6 +28,8 @@ const Icon = ({width, height, color, name}: IconProps) => {
             return <Triangle width={width} height={height} color={color}/>
         case IconNames.Circle:
             return <Circle width={width} height={height} color={color}/>
+        case IconNames.Cross:
+            return <Cross width={width} height={height} color={color} strokeWidth={5}/>
         default:
             return <div/>
     }

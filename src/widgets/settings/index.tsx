@@ -1,4 +1,3 @@
-import config from "config.json";
 import PopUp from "features/popUp";
 import React, {useState} from "react";
 
@@ -8,19 +7,13 @@ interface SettingsProps
 }
 
 const Settings = ({toggle}: SettingsProps) => {
-    const [width, setWidth] = useState(config.canvas.objects.defaultWidth);
-    const [height, setHeight] = useState(config.canvas.objects.defaultHeight);
+    const [width, setWidth] = useState(Number(process.env.REACT_APP_CANVAS_WIDTH));
+    const [height, setHeight] = useState(Number(process.env.REACT_APP_CANVAS_HEIGHT));
 
     return (
         <PopUp
-            submitAction={() => {
-                config.canvas.objects.defaultWidth = width;
-                config.canvas.objects.defaultHeight = height;
-                toggle();
-            }}
-            submitValue={"Save"}
-            cancelAction={() => toggle()}
-            cancelValue={"Cancel"}>
+            onClose={() => toggle()}
+        >
             <label>
                 Width
                 <input

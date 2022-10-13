@@ -1,34 +1,31 @@
 import {ReactNode, MouseEvent} from "react";
 import "./styles.css";
+import Icon, { IconNames } from "shared/icons";
 
 interface PopUpProps
 {
     children: ReactNode;
-    submitAction: () => void;
-    submitValue: string;
-    cancelAction: () => void;
-    cancelValue: string;
+    onClose: () => void;
 }
 
-const PopUp = ({children, submitAction, submitValue, cancelAction, cancelValue}: PopUpProps) => {
-    const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+const PopUp = ({children, onClose}: PopUpProps) => {
+    const handleClose = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        submitAction();
+        onClose();
     };
 
-    const handleCancel = (e: MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        cancelAction();
+    const closeBtnSize = 25;
+    const closeBtnStyle = {
+        left: `calc(100% - 20px - ${closeBtnSize}px)`,
     };
 
     return (
         <div className="popup">
             <div className="popup__box">
+                <button className="popup__btn popup__close-btn" onClick={handleClose} style={closeBtnStyle}>
+                    <Icon width={closeBtnSize} height={closeBtnSize} color={"black"} name={IconNames.Cross}/>
+                </button>
                 {children}
-                <div className="popup__btn-bar">
-                    <button className="popup__btn popup__submit-btn" onClick={handleSubmit}>{submitValue}</button>
-                    <button className="popup__btn popup__cancel-btn" onClick={handleCancel}>{cancelValue}</button>
-                </div>
             </div>
         </div>
     )
