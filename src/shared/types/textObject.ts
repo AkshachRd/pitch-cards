@@ -13,6 +13,7 @@ export enum FontFamily {
 }
 
 export enum FontStyle {
+    Normal = "",
     Italic = "italic",
     Bold = 700
 }

@@ -1,4 +1,4 @@
-import {ArtObject, CanvasObjectTypes, ImageObject, Shapes} from "shared/types";
+import {ArtObject, CanvasObjectTypes, FontFamily, FontStyle, ImageObject, Shapes, TextObject} from "shared/types";
 
 export const createRect = (id: string): ArtObject => {
     return {
@@ -56,5 +56,30 @@ export const createImage = (id: string, width: number, height: number, source: s
         selected: false,
         scale: {x: 1, y: 1},
         source
+    };
+}
+
+export const createText = (
+    id: string,  
+    content: string, 
+    fontFamily: FontFamily, 
+    fontSize: number, 
+    color: string,
+    style: FontStyle
+): TextObject => {
+    return {
+        id: id,
+        type: CanvasObjectTypes.Text,
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 100,
+        selected: false,
+        scale: {x: 1, y: 1},
+        content,
+        fontFamily,
+        fontSize,
+        color,
+        style
     };
 }
