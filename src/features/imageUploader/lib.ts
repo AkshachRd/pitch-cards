@@ -14,3 +14,7 @@ export const convertToBase64 = (file: File) => {
         };
     });
 };
+
+export const isImgBiggerThanCanvas = (imgWidth: number, imgHeight: number, canvasWidth: number, canvasHeight: number) => {
+    return imgWidth > canvasWidth || imgHeight > canvasHeight;
+};

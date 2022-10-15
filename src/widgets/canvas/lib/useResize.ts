@@ -1,7 +1,7 @@
 import {MouseEvent, useReducer, useState} from "react";
 import {CanvasObject} from "shared/types";
 import {useAppDispatch} from "shared/hooks";
-import {changeScale, editCoordsByIndex, resize} from "../model/canvasSlice";
+import {changeScale, editCoordsByIndex, resizeObject} from "../model/canvasSlice";
 import {isMouseInCorner} from "shared/lib/canvas";
 
 const useResize = (objs: Array<CanvasObject>) => {
@@ -93,7 +93,7 @@ const useResize = (objs: Array<CanvasObject>) => {
                 else
                 {
                     dispatch(editCoordsByIndex({index, x: obj.x + dx, y: obj.y + dy}));
-                    dispatch(resize({index, width: obj.width - dx, height: obj.height - dy}));
+                    dispatch(resizeObject({index, width: obj.width - dx, height: obj.height - dy}));
                 }
             }
             else if (dragTR)
@@ -119,7 +119,7 @@ const useResize = (objs: Array<CanvasObject>) => {
                 else
                 {
                     dispatch(editCoordsByIndex({index, x: obj.x, y: obj.y + dy}));
-                    dispatch(resize({index, width: obj.width + dx, height: obj.height - dy}));
+                    dispatch(resizeObject({index, width: obj.width + dx, height: obj.height - dy}));
                 }
             }
             else if (dragBL)
@@ -145,7 +145,7 @@ const useResize = (objs: Array<CanvasObject>) => {
                 else
                 {
                     dispatch(editCoordsByIndex({index, x: obj.x + dx, y: obj.y}));
-                    dispatch(resize({index, width: obj.width - dx, height: obj.height + dy}));
+                    dispatch(resizeObject({index, width: obj.width - dx, height: obj.height + dy}));
                 }
             }
             else if (dragBR)
@@ -171,7 +171,7 @@ const useResize = (objs: Array<CanvasObject>) => {
                 else
                 {
                     dispatch(editCoordsByIndex({index, x: obj.x, y: obj.y}));
-                    dispatch(resize({index, width: obj.width + dx, height: obj.height + dy}));
+                    dispatch(resizeObject({index, width: obj.width + dx, height: obj.height + dy}));
                 }
             }
         });

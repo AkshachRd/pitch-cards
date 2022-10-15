@@ -7,13 +7,7 @@ import "./styles.css";
 import useSelect from "../lib/useSelect";
 import useResize from "../lib/useResize";
 
-interface CanvasProps
-{
-    width: number;
-    height: number;
-}
-
-export const Canvas = ({width, height}: CanvasProps) => {
+export const Canvas = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const state = useAppSelector(selectCanvasState);
     const canvasObjects = state.objects;
@@ -57,8 +51,8 @@ export const Canvas = ({width, height}: CanvasProps) => {
         <div className="canvas">
             <canvas
                 ref={canvasRef}
-                width={width}
-                height={height}
+                width={state.width}
+                height={state.height}
                 onMouseDown={mouseDown}
                 onMouseUp={mouseUp}
                 onMouseOut={mouseOut}

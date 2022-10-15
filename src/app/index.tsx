@@ -10,16 +10,13 @@ const App = () => {
     const [settings, toggleSettings] = useReducer((state) => !state, false);
     const [imageUploader, toggleImageUploader] = useReducer((state) => !state, false);
 
-    const CANVAS_WIDTH = Number(process.env.REACT_APP_CANVAS_WIDTH);
-    const CANVAS_HEIGHT = Number(process.env.REACT_APP_CANVAS_HEIGHT);
-
     return (
         <div className="App">
             <Header>
                 <button onClick={(e) => {e.preventDefault(); toggleSettings();}}>Settings</button>
                 <button onClick={(e) => {e.preventDefault(); toggleImageUploader();}}>Upload image</button>
             </Header>
-            <Canvas width={CANVAS_WIDTH} height={CANVAS_HEIGHT}/>
+            <Canvas/>
             {settings && <Settings toggle={toggleSettings}/>}
             {imageUploader && <ImageUploader toggle={toggleImageUploader}/>}
         </div>

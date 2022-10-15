@@ -1,10 +1,10 @@
 import {MouseEvent, ChangeEvent, useState, useReducer} from "react";
-import { useAppDispatch } from "shared/hooks";
+import { useAppDispatch, useAppSelector } from "shared/hooks";
 import { createImage } from "shared/lib/canvas";
-import { add } from "widgets/canvas/model/canvasSlice";
+import { add, resizeCanvas, selectCanvasSize } from "widgets/canvas/model/canvasSlice";
 import {v4 as uuid4v} from "uuid";
 import PopUp from "features/popUp";
-import { convertToBase64 } from "../lib";
+import { convertToBase64, isImgBiggerThanCanvas } from "../lib";
 
 interface ImageUploaderProps
 {
@@ -14,7 +14,10 @@ interface ImageUploaderProps
 const ImageUploader = ({toggle}: ImageUploaderProps) => {
     const dispatch = useAppDispatch();
     const [baseImage, setBaseImage] = useState("");
+    const [imageBiggerThanCanvas, toggleImageBiggerThanCanvas] = useReducer((state) => !state, false);
     const [isError, toggleIsError] = useReducer((state) => !state, false);
+    const {width: canvasWidth, height: canvasHeight} = useAppSelector(selectCanvasSize);
+    const [currImg, setCurrImg] = useState<HTMLImageElement | null>(null);
 
     const uploadImage = async (e: ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -28,25 +31,68 @@ const ImageUploader = ({toggle}: ImageUploaderProps) => {
     const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        const image = new Image();
-        image.src = baseImage;
-        image.onload = () => {
-            const img = createImage(uuid4v(), image.naturalWidth, image.naturalHeight, baseImage);
-            dispatch(add(img));
-            setBaseImage("");
-            toggle();
+        const img = new Image();
+        img.src = baseImage;
+        img.onload = () => {
+            const imgWidth = img.naturalWidth;
+            const imgHeight = img.naturalHeight;
+
+            if (isImgBiggerThanCanvas(imgWidth, imgHeight, canvasWidth, canvasHeight))
+            {
+                toggleImageBiggerThanCanvas();
+                setCurrImg(img);
+            }
+            else
+            {
+                const imgObj = createImage(uuid4v(), imgWidth, imgHeight, baseImage);
+                dispatch(add(imgObj));
+                toggle();
+            }
         };
-        image.onerror = () => {
+        img.onerror = () => {
             setBaseImage("");
             toggleIsError();
         };
     };
 
+    const enlargeCanvas = (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+
+        if (!currImg) throw new Error("currImg is not assigned");
+
+        const img = createImage(uuid4v(), currImg.naturalWidth, currImg.naturalHeight, baseImage);
+        dispatch(resizeCanvas({width: currImg.naturalWidth, height: currImg.naturalHeight}));
+        dispatch(add(img));
+        toggle();
+    };
+
+    const keepCanvas = (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+
+        if (!currImg) throw new Error("currImg is not assigned");
+
+        const imgObj = createImage(uuid4v(), currImg.naturalWidth, currImg.naturalHeight, baseImage);
+        dispatch(add(imgObj));
+        toggle();
+    };
+
     return (
         <PopUp onClose={toggle}>
             <input type="file" name="file" required={true} onChange={uploadImage} accept=".png, .jpg, .jpeg" />
-            <button disabled={!baseImage} onClick={handleSubmit}>Add image</button>
+            <button disabled={!baseImage || isError} onClick={handleSubmit}>Add image</button>
             {isError && <p>Can't load the image!</p>}
+            {imageBiggerThanCanvas  && 
+            <div>
+                <button onClick={enlargeCanvas}>Enlarge canvas</button>
+                <button onClick={keepCanvas}>Keep canvas</button>
+                <button onClick={(e) => {
+                    e.preventDefault();
+                    toggle();
+                }}
+                >
+                    Close
+                </button>
+            </div>}
         </PopUp>
     )
 };

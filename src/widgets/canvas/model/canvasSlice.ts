@@ -6,6 +6,8 @@ import {isArtObject} from "shared/lib/typeGuards";
 
 export interface CanvasState
 {
+    width: number;
+    height: number;
     filter: Filters;
     objects: Array<CanvasObject>;
 }
@@ -19,7 +21,7 @@ export interface EditCoordsPayload
     y: number;
 }
 
-export interface ResizePayload
+export interface ResizeObjectPayload
 {
     index: Index;
     width: number;
@@ -42,8 +44,16 @@ interface SetObjectSelectionByIdPayload
     selected: boolean;
 }
 
+interface ResizeCanvasPayload
+{
+    width: number;
+    height: number;
+}
+
 const initialState: CanvasState = {
     filter: Filters.None,
+    width: Number(process.env.REACT_APP_CANVAS_WIDTH),
+    height: Number(process.env.REACT_APP_CANVAS_HEIGHT),
     objects: []
 };
 
@@ -80,7 +90,7 @@ export const canvasSlice = createSlice({
                 obj.y = action.payload.y;
             }
         },
-        resize: (state, action: PayloadAction<ResizePayload>) => {
+        resizeObject: (state, action: PayloadAction<ResizeObjectPayload>) => {
             const obj = state.objects[action.payload.index];
             if (obj)
             {
@@ -128,6 +138,10 @@ export const canvasSlice = createSlice({
             {
                 obj.scale = {x: action.payload.x, y: action.payload.y};
             }
+        },
+        resizeCanvas: (state, action: PayloadAction<ResizeCanvasPayload>) => {
+            state.width = action.payload.width;
+            state.height = action.payload.height;
         }
     }
 })
@@ -137,16 +151,21 @@ export const {
     remove,
     editCoords,
     editCoordsByIndex,
-    resize,
+    resizeObject,
     editColor,
     deselectObjects,
     setObjectSelectionById,
     changeScale,
     changeFilter,
     select,
-    deselect
+    deselect,
+    resizeCanvas
 } = canvasSlice.actions;
 export const selectCanvasObjects = (state: RootState) => state.canvas.objects;
+export const selectCanvasSize = (state: RootState) => ({
+    width: state.canvas.width,
+    height: state.canvas.height
+});
 export const selectCanvasState = (state: RootState) => state.canvas;
 export const selectCanvasFilter = (state: RootState) => state.canvas.filter;
 export default canvasSlice.reducer;
