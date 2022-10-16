@@ -40,7 +40,7 @@ const TextEditor = () => {
                 </select>
                 <input type="number" name="fontSize" defaultValue={12}/>
                 <select name="style">
-                    {Object.keys(FontStyle).map((fontStyle) => 
+                    {Object.keys(FontStyle).filter((style) => isNaN(Number(style))).map((fontStyle) => 
                         <option key={fontStyle}>{fontStyle}</option>
                     )}
                 </select>
