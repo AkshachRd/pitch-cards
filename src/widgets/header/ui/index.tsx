@@ -9,6 +9,7 @@ import {v4 as uuid4v} from "uuid";
 import {createCircle, createRect, createTriangle} from "shared/lib/canvas";
 import MenuItem from "entities/menuItem";
 import TextEditor from "features/textEditor";
+import "./styles.css";
 
 interface HeaderProps
 {
@@ -38,16 +39,9 @@ const Header = ({children}: HeaderProps) => {
 
             ]}
     ];
-
-    let color = "#000000";
-
+    
     return (
-        <>
-            <ColorPicker
-                disabled={false}
-                value={color}
-                action={(color) => dispatch(editColor(color))}
-            />
+        <div className="header">
             <Menu>
                 {menuItems.map(({iconName, title, dropdownButtons}) => 
                     <MenuItem key={title} item={{iconName, title}}>
@@ -63,7 +57,7 @@ const Header = ({children}: HeaderProps) => {
                 </MenuItem>
             </Menu>
             {children}
-        </>
+        </div>
     )
 }
 
