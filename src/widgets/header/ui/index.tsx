@@ -1,7 +1,6 @@
-import ColorPicker from "features/colorPicker";
 import {ReactNode} from "react";
 import {useAppDispatch} from "shared/hooks";
-import {add, changeFilter, editColor} from "../../canvas/model/canvasSlice";
+import {add, changeFilter} from "../../canvas/model/canvasSlice";
 import {Filters} from "shared/types";
 import Menu from "features/menu";
 import Icon, {IconNames} from "shared/icons";
@@ -39,7 +38,7 @@ const Header = ({children}: HeaderProps) => {
 
             ]}
     ];
-    
+
     return (
         <div className="header">
             <Menu>
