@@ -97,7 +97,9 @@ const drawImageObject = (ctx: CanvasRenderingContext2D, obj: ImageObject) => {
 const drawTextObject = (ctx: CanvasRenderingContext2D, obj: TextObject) => {
     ctx.font = `${obj.style} ${obj.fontSize}px ${obj.fontFamily}`;
     ctx.fillStyle = obj.color;
-    ctx.fillText(obj.content, obj.x, obj.y, obj.width);
+    const metrics = ctx.measureText(obj.content);
+    const contentHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+    ctx.fillText(obj.content, obj.x, obj.y + contentHeight, obj.width);
 };
 
 const drawSelectionLines = (ctx: CanvasRenderingContext2D, obj: CanvasObject, pattern: Array<number>) => {

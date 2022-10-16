@@ -4,8 +4,8 @@ import "./styles.css";
 interface MenuButtonProps
 {
     title: string;
-    onClick: () => void;
-    children: ReactNode;
+    onClick?: () => void;
+    children?: ReactNode;
 }
 
 const MenuButton = ({title, onClick, children}: MenuButtonProps) => {

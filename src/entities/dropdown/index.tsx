@@ -1,27 +1,19 @@
-import Icon, {IconNames} from "shared/icons";
+import {ReactNode, Children} from "react";
 import "./styles.css";
-
-export interface DropdownButton {
-    iconName: IconNames;
-    color: string;
-    action: () => void;
-}
 
 interface DropdownProps
 {
-    disabled: boolean;
-    buttons: Array<DropdownButton>;
+    disabled?: boolean;
+    children?: ReactNode;
 }
 
-const Dropdown = ({disabled, buttons}: DropdownProps) => {
+const Dropdown = ({disabled = false, children}: DropdownProps) => {
     return (
-        <ul className={`dropdown ${disabled ? "" : "dropdown_show"}`}>
-            {buttons.map((button, index) => {
-                return <li className="dropdown__button" onClick={button.action} key={index}>
-                    <Icon width={50} height={50} color={button.color} name={button.iconName}/>
-                </li>
-            })}
-        </ul>
+        <div className={`dropdown ${disabled ? "" : "dropdown_show"}`}>
+            {Children.map(children, (child) => 
+                <div>{child}</div>
+            )}
+        </div>
     )
 }
 

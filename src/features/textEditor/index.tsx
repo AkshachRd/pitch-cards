@@ -38,7 +38,7 @@ const TextEditor = () => {
                         <option key={fontFamily}>{fontFamily}</option>
                     )}
                 </select>
-                <input type="number" name="fontSize"/>
+                <input type="number" name="fontSize" defaultValue={12}/>
                 <select name="style">
                     {Object.keys(FontStyle).map((fontStyle) => 
                         <option key={fontStyle}>{fontStyle}</option>

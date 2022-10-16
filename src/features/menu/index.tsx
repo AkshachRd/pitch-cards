@@ -1,17 +1,15 @@
-import MenuItem, {MenuItemDesc} from "entities/menuItem";
+import {ReactNode} from "react";
 import "./styles.css";
 
 interface MenuProps
 {
-    menuItems: Array<MenuItemDesc>;
+    children?: ReactNode;
 }
 
-const Menu = ({menuItems}: MenuProps) => {
+const Menu = ({children}: MenuProps) => {
     return (
         <ul className="menu">
-            {menuItems.map((item, index) => (
-                <MenuItem item={item} key={index}/>
-            ))}
+            {children}
         </ul>
     )
 }

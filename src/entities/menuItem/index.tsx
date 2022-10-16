@@ -1,30 +1,24 @@
 import MenuButton from "../menuButton";
 import Icon, {IconNames} from "shared/icons";
-import Dropdown, {DropdownButton} from "../dropdown";
-import {useEffect, useReducer, useRef} from "react";
+import Dropdown from "../dropdown";
+import {useEffect, useReducer, useRef, ReactNode} from "react";
 import "./styles.css";
 
 export interface MenuItemDesc
 {
     iconName: IconNames;
     title: string;
-    dropdownButtons: Array<DropdownButton>;
 }
 
 interface MenuItemProps
 {
     item: MenuItemDesc;
+    children?: ReactNode;
 }
 
-const MenuItem = ({item}: MenuItemProps) => {
+const MenuItem = ({item, children}: MenuItemProps) => {
     const [dropdown, toggleDropdown] = useReducer((state) => !state, true);
     const itemRef = useRef<HTMLLIElement>(null);
-    const dropdownButtons = item.dropdownButtons.map((button) => {
-        return {...button, action: () => {
-                button.action();
-                toggleDropdown();
-            }}
-    });
 
     useEffect(() => {
         if (!itemRef.current) throw new Error("itemRef is not assigned");
@@ -47,7 +41,9 @@ const MenuItem = ({item}: MenuItemProps) => {
                 <MenuButton title={item.title} onClick={() => toggleDropdown()}>
                     <Icon width={50} height={50} color={"gray"} name={item.iconName}/>
                 </MenuButton>
-                <Dropdown disabled={dropdown} buttons={dropdownButtons}/>
+                <Dropdown disabled={dropdown}>
+                    {children}
+                </Dropdown>
             </li>
         </div>
     )

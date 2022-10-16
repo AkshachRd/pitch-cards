@@ -4,9 +4,11 @@ import {useAppDispatch} from "shared/hooks";
 import {add, changeFilter, editColor} from "../../canvas/model/canvasSlice";
 import {Filters} from "shared/types";
 import Menu from "features/menu";
-import {IconNames} from "shared/icons";
+import Icon, {IconNames} from "shared/icons";
 import {v4 as uuid4v} from "uuid";
 import {createCircle, createRect, createTriangle} from "shared/lib/canvas";
+import MenuItem from "entities/menuItem";
+import TextEditor from "features/textEditor";
 
 interface HeaderProps
 {
@@ -46,7 +48,20 @@ const Header = ({children}: HeaderProps) => {
                 value={color}
                 action={(color) => dispatch(editColor(color))}
             />
-            <Menu menuItems={menuItems}/>
+            <Menu>
+                {menuItems.map(({iconName, title, dropdownButtons}) => 
+                    <MenuItem key={title} item={{iconName, title}}>
+                        {dropdownButtons.map(({action, iconName, color}) => 
+                            <button key={iconName + " " + color} onClick={action}>
+                                <Icon name={iconName} color={color} width={50} height={50}/>
+                            </button>
+                        )}
+                    </MenuItem>
+                )}
+                <MenuItem item={{iconName: IconNames.Circle, title: "Text"}}>
+                    <TextEditor />
+                </MenuItem>
+            </Menu>
             {children}
         </>
     )
