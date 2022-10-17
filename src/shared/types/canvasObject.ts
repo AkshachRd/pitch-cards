@@ -2,7 +2,8 @@ export enum CanvasObjectTypes
 {
     Text = "TEXT",
     Image = "IMAGE",
-    ArtObject = "ARTOBJECT"
+    ArtObject = "ARTOBJECT",
+    Selection = "SELECTION"
 }
 
 export interface CanvasObject

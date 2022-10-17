@@ -4,8 +4,8 @@ import {useAppSelector} from "shared/hooks";
 import {selectCanvasState} from "../model/canvasSlice";
 import useDragNDrop from "../lib/useDragAndDrop";
 import "./styles.css";
-import useSelect from "../lib/useSelect";
 import useResize from "../lib/useResize";
+import useAreaSelection from "../lib/useAreaSelection";
 
 export const Canvas = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -14,25 +14,32 @@ export const Canvas = () => {
     const filter = state.filter;
     const [mouseDownDragNDrop, mouseUpDragNDrop, mouseOutDragNDrop, mouseMoveDragNDrop] = useDragNDrop(canvasObjects);
     const [mouseDownResize, mouseUpResize, mouseOutResize, mouseMoveResize] = useResize(canvasObjects);
-    const [mouseDownSelect] = useSelect(canvasObjects);
+    const [mouseDownAreaSelection, 
+        mouseUpAreaSelection, 
+        mouseOutAreaSelection,
+        mouseMoveAreaSelection
+    ] = useAreaSelection(canvasObjects);
 
     const mouseDown = (e: MouseEvent<HTMLCanvasElement>) => {
-        mouseDownSelect(e);
+        mouseDownAreaSelection(e);
         mouseDownDragNDrop(e);
         mouseDownResize(e);
     };
 
     const mouseUp = (e: MouseEvent<HTMLCanvasElement>) => {
+        mouseUpAreaSelection(e);
         mouseUpDragNDrop(e);
         mouseUpResize(e);
     };
 
     const mouseOut = (e: MouseEvent<HTMLCanvasElement>) => {
-          mouseOutDragNDrop(e);
-          mouseOutResize(e);
+        mouseOutAreaSelection(e);
+        mouseOutDragNDrop(e);
+        mouseOutResize(e);
     };
 
     const mouseMove = (e: MouseEvent<HTMLCanvasElement>) => {
+        mouseMoveAreaSelection(e);
         mouseMoveDragNDrop(e);
         mouseMoveResize(e);
     };

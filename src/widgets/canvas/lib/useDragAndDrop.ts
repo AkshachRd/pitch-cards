@@ -2,7 +2,7 @@ import {MouseEvent, useReducer, useState} from "react";
 import {CanvasObject} from "shared/types";
 import {useAppDispatch} from "shared/hooks";
 import {editCoords, EditCoordsPayload, } from "../model/canvasSlice";
-import {isMouseInCanvasObject} from "../../../shared/lib/canvas";
+import {isMouseInCanvasObject} from "shared/lib/canvas";
 
 const useDragNDrop = (objs: Array<CanvasObject>) => {
     const [dragging, toggleDragging] = useReducer((state) => !state, false);

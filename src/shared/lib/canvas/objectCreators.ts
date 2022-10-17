@@ -1,4 +1,5 @@
-import {ArtObject, CanvasObjectTypes, FontFamily, FontStyle, ImageObject, Shapes, TextObject} from "shared/types";
+import {ArtObject, CanvasObject, CanvasObjectTypes, FontFamily, FontStyle, ImageObject, Shapes, TextObject} from "shared/types";
+import {v4 as uuid4v} from "uuid";
 
 export const createRect = (id: string): ArtObject => {
     return {
@@ -83,3 +84,16 @@ export const createText = (
         style
     };
 }
+
+export const createSelectionArea = (x: number, y: number): CanvasObject => {
+    return {
+        id: uuid4v(),
+        type: CanvasObjectTypes.Selection,
+        x,
+        y,
+        width: 0,
+        height: 0,
+        selected: false,
+        scale: {x: 1, y: 1}
+    };
+};

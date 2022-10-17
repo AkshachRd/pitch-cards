@@ -1,4 +1,5 @@
 import {CanvasObject} from "shared/types";
+import { isAreaSelectionObject } from "../typeGuards";
 
 const closeEnough = 10;
 
@@ -8,7 +9,7 @@ export const isMouseInCanvasObject = (clickX: number, clickY: number, obj: Canva
     const bottomSide = obj.y + obj.height;
     const leftSide = obj.x;
 
-    return clickX > leftSide && clickX < rightSide && clickY > topSide && clickY < bottomSide;
+    return !isAreaSelectionObject(obj) && clickX > leftSide && clickX < rightSide && clickY > topSide && clickY < bottomSide;
 };
 
 const checkCloseEnough = (closeEnough: number, p1: number, p2: number) => Math.abs(p1 - p2) < closeEnough;
@@ -24,4 +25,11 @@ export const isMouseInCanvasObjectCorner = (clickX: number, clickY: number, obj:
     const BR = isMouseInCorner(clickX, clickY, obj.x + obj.width, obj.y + obj.height);
 
     return TL || BL || TR || BR;
+};
+
+export const areObjsIntersect = (objA: CanvasObject, objB: CanvasObject) => {
+    return !(objB.x > objA.x + objA.width ||
+        objB.x + objB.width < objA.x ||
+        objB.y > objA.y + objA.height ||
+        objB.y + objB.height < objA.y);
 };

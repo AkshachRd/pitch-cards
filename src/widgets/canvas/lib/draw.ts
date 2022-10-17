@@ -1,9 +1,10 @@
 import {ArtObject, CanvasObject, CanvasObjectTypes, ImageObject, Shapes, TextObject} from "shared/types";
-import {isArtObject, isImageObject, isTextObject} from "shared/lib/typeGuards";
+import {isAreaSelectionObject, isArtObject, isImageObject, isTextObject} from "shared/lib/typeGuards";
+
+const pattern = [10, 10];
 
 export const drawCanvasObjects = (ctx: CanvasRenderingContext2D,
                                   objs: Array<CanvasObject>) => {
-    const pattern = [10, 10];
     const CORNER_SIDE_LENGTH = Number(process.env.REACT_APP_OBJECT_CORNER_SIDE_LENGTH);
     const cornerColor = "#000";
     const { width, height } = ctx.canvas.getBoundingClientRect();
@@ -14,6 +15,11 @@ export const drawCanvasObjects = (ctx: CanvasRenderingContext2D,
         {
             drawSelectionLines(ctx, obj, pattern);
             drawDragCorners(ctx, obj, CORNER_SIDE_LENGTH, cornerColor);
+        }
+
+        if (isAreaSelectionObject(obj))
+        {
+            drawSelectionLines(ctx, obj, pattern);
         }
     })
 };
@@ -60,6 +66,8 @@ const drawCanvasObject = (ctx: CanvasRenderingContext2D, obj: CanvasObject) => {
             {
                 drawTextObject(ctx, obj);
             }
+            break;
+        case CanvasObjectTypes.Selection:
             break;
     }
 
