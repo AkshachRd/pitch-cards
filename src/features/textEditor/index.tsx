@@ -4,6 +4,7 @@ import { createText } from "shared/lib/canvas";
 import { FontFamily, FontStyle } from "shared/types";
 import {v4 as uuid4v} from "uuid";
 import { add } from "widgets/canvas/model/canvasSlice";
+import { getFontFamilyName } from "./lib";
 
 const TextEditor = () => {
     const dispatch = useAppDispatch();
@@ -34,9 +35,10 @@ const TextEditor = () => {
                 <input type="text" name="content"/>
                 <input type="color" name="color"/>
                 <select name="fontFamily">
-                    {Object.keys(FontFamily).map((fontFamily) => 
-                        <option key={fontFamily}>{fontFamily}</option>
-                    )}
+                    {Object.values(FontFamily).map((fontFamily) => {
+                        const fontName = getFontFamilyName(fontFamily);
+                        return <option key={fontName}>{fontName}</option>;
+                    })}
                 </select>
                 <input type="number" name="fontSize" defaultValue={12}/>
                 <select name="style">
