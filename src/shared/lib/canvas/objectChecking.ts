@@ -1,8 +1,8 @@
-import {CanvasObject, Rect} from "shared/types";
+import {Rect} from "shared/types";
 
 const closeEnough = 10;
 
-export const isMouseInCanvasObject = (clickX: number, clickY: number, obj: CanvasObject) => {
+export const isMouseInRect = (clickX: number, clickY: number, obj: Rect) => {
     const topSide = obj.y;
     const rightSide = obj.x + obj.width;
     const bottomSide = obj.y + obj.height;
@@ -17,7 +17,7 @@ export const isMouseInCorner = (clickX: number, clickY: number, cornerX: number,
     return checkCloseEnough(closeEnough, clickX, cornerX) && checkCloseEnough(closeEnough, clickY, cornerY);
 };
 
-export const isMouseInCanvasObjectCorner = (clickX: number, clickY: number, obj: CanvasObject) => {
+export const isMouseInRectCorner = (clickX: number, clickY: number, obj: Rect) => {
     const TL = isMouseInCorner(clickX, clickY, obj.x, obj.y);
     const BL = isMouseInCorner(clickX, clickY, obj.x, obj.y + obj.height);
     const TR = isMouseInCorner(clickX, clickY, obj.x + obj.width, obj.y);

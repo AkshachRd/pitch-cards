@@ -2,7 +2,7 @@ import {MouseEvent, useReducer, useState} from "react";
 import {CanvasObject} from "shared/types";
 import {useAppDispatch} from "shared/hooks";
 import {editCoords, EditCoordsPayload, } from "../model/canvasSlice";
-import {isMouseInCanvasObject} from "shared/lib/canvas";
+import {isMouseInRect, isMouseInRectCorner} from "shared/lib/canvas";
 
 const useDragNDrop = (objs: Array<CanvasObject>) => {
     const [dragging, toggleDragging] = useReducer((state) => !state, false);
@@ -15,11 +15,14 @@ const useDragNDrop = (objs: Array<CanvasObject>) => {
         e.currentTarget.style.cursor = 'pointer';
         setCoords({x: e.clientX, y: e.clientY});
 
-        const rect = e.currentTarget.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
+        const canvasRect = e.currentTarget.getBoundingClientRect();
+        const clickX = e.clientX - canvasRect.left;
+        const clickY = e.clientY - canvasRect.top;
 
-        if (objs.find((obj) => isMouseInCanvasObject(clickX, clickY, obj)))
+        if (objs.find((obj) => {
+            const objRect = (({x, y, width, height}) => ({x, y, width, height}))(obj);
+            return isMouseInRect(clickX, clickY, objRect) && !isMouseInRectCorner(clickX, clickY, objRect);
+        }))
         {
             toggleDragging();
         }

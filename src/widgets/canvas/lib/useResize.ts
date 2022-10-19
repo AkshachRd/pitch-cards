@@ -8,7 +8,8 @@ const useResize = (objs: Array<CanvasObject>) => {
     const dispatch = useAppDispatch();
     const [coords, setCoords] = useState({x: 0, y: 0});
     const [resizing, toggleResizing] = useReducer((state) => !state, false);
-    const [[dragTL, dragBL, dragTR, dragBR], setDragCorner] = useState([false, false, false, false]); // TL BL TR BR
+    const [deltaX, setDeltaX] = useState(0);
+    const [deltaY, setDeltaY] = useState(0);
 
     const selectedObjs = objs.filter((obj) => obj.selected);
 
@@ -16,32 +17,51 @@ const useResize = (objs: Array<CanvasObject>) => {
         e.preventDefault();
 
         e.currentTarget.style.cursor = 'pointer';
-        setCoords({x: e.clientX, y: e.clientY});
 
-        const rect = e.currentTarget.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
+        const canvasRect = e.currentTarget.getBoundingClientRect();
+        const clickX = e.clientX - canvasRect.left;
+        const clickY = e.clientY - canvasRect.top;
 
         selectedObjs.forEach((obj) => {
-            if (isMouseInCorner(clickX, clickY, obj.x, obj.y)) //dragTL
+            if (isMouseInCorner(clickX, clickY, obj.x, obj.y)) //TL
             {
-                setDragCorner([true, false, false, false]);
+                const x = obj.x + obj.width;
+                const y = obj.y + obj.height;
+
+                setCoords({x, y});
                 toggleResizing();
+                setDeltaX(x - clickX);
+                setDeltaY(y - clickY);
             }
-            else if (isMouseInCorner(clickX, clickY, obj.x, obj.y + obj.height)) //dragBL
+            else if (isMouseInCorner(clickX, clickY, obj.x, obj.y + obj.height)) // BL
             {
-                setDragCorner([false, true, false, false]);
+                const x = obj.x + obj.width;
+                const y = obj.y;
+
+                setCoords({x, y});
                 toggleResizing();
+                setDeltaX(x - clickX);
+                setDeltaY(y - clickY);
             }
-            else if (isMouseInCorner(clickX, clickY, obj.x + obj.width, obj.y)) //dragTR
+            else if (isMouseInCorner(clickX, clickY, obj.x + obj.width, obj.y)) // TR
             {
-                setDragCorner([false, false, true, false]);
+                const x = obj.x;
+                const y = obj.y + obj.height;
+
+                setCoords({x, y});
                 toggleResizing();
+                setDeltaX(x - clickX);
+                setDeltaY(y - clickY);
             }
-            else if (isMouseInCorner(clickX, clickY, obj.x + obj.width, obj.y + obj.height)) //dragBR
+            else if (isMouseInCorner(clickX, clickY, obj.x + obj.width, obj.y + obj.height)) //BR
             {
-                setDragCorner([false, false, false, true]);
+                const x = obj.x;
+                const y = obj.y;
+
+                setCoords({x, y});
                 toggleResizing();
+                setDeltaX(x - clickX);
+                setDeltaY(y - clickY);
             }
         });
     };
@@ -50,7 +70,6 @@ const useResize = (objs: Array<CanvasObject>) => {
         if (!resizing) return;
 
         e.preventDefault();
-        setDragCorner([false, false, false, false]);
         toggleResizing();
     };
 
@@ -61,122 +80,39 @@ const useResize = (objs: Array<CanvasObject>) => {
 
         e.preventDefault();
 
-        const dx = e.clientX - coords.x;
-        const dy = e.clientY - coords.y;
+        const canvasRect = e.currentTarget.getBoundingClientRect();
+        const clickX = e.clientX - canvasRect.left;
+        const clickY = e.clientY - canvasRect.top;
 
         objs.forEach((obj, index) => {
             if (!obj.selected) return;
 
-            const scaleX = obj.scale.x;
-            const scaleY = obj.scale.y;
+            const x = Math.min(coords.x, clickX);
+            const y = Math.min(coords.y, clickY);
+            const width = Math.abs(coords.x - clickX);
+            const height = Math.abs(coords.y - clickY);
+            const dx = coords.x - clickX;
+            const dy = coords.y - clickY;
 
-            if (dragTL)
+            const scaleX = (deltaX * dx) >= 0 ? obj.scale.x : obj.scale.x * -1;
+            const scaleY = (deltaY * dy) >= 0 ? obj.scale.y : obj.scale.y * -1;
+
+            if (obj.x !== x || obj.y !== y)
             {
-                const width = obj.width - dx;
-                const height = obj.height - dy;
-
-                if (width < 0 && height < 0)
-                {
-                    setDragCorner([false, false, false, true]);
-                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY * -1}));
-                }
-                else if (width < 0)
-                {
-                    setDragCorner([false, false, true, false]);
-                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY}));
-                }
-                else if (height < 0)
-                {
-                    setDragCorner([false, true, false, false]);
-                    dispatch(changeScale({index, x: scaleX, y: scaleY * -1}));
-                }
-                else
-                {
-                    dispatch(editCoordsByIndex({index, x: obj.x + dx, y: obj.y + dy}));
-                    dispatch(resizeObject({index, width: obj.width - dx, height: obj.height - dy}));
-                }
+                dispatch(editCoordsByIndex({index, x, y}));
             }
-            else if (dragTR)
+            if (obj.width !== width || obj.height !== height)
             {
-                const width = obj.width + dx;
-                const height = obj.height - dy;
-
-                if (width < 0 && height < 0)
-                {
-                    setDragCorner([false, true, false, false]);
-                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY * -1}));
-                }
-                else if (width < 0)
-                {
-                    setDragCorner([true, false, false, false]);
-                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY}));
-                }
-                else if (height < 0)
-                {
-                    setDragCorner([false, false, false, true]);
-                    dispatch(changeScale({index, x: scaleX, y: scaleY * -1}));
-                }
-                else
-                {
-                    dispatch(editCoordsByIndex({index, x: obj.x, y: obj.y + dy}));
-                    dispatch(resizeObject({index, width: obj.width + dx, height: obj.height - dy}));
-                }
+                dispatch(resizeObject({index, width, height}));
             }
-            else if (dragBL)
+            if (obj.scale.x !== scaleX || obj.scale.y !== scaleY)
             {
-                const width = obj.width - dx;
-                const height = obj.height + dy;
-
-                if (width < 0 && height < 0)
-                {
-                    setDragCorner([false, false, true, false]);
-                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY * -1}));
-                }
-                else if (width < 0)
-                {
-                    setDragCorner([false, false, false, true]);
-                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY}));
-                }
-                else if (height < 0)
-                {
-                    setDragCorner([true, false, false, false]);
-                    dispatch(changeScale({index, x: scaleX, y: scaleY * -1}));
-                }
-                else
-                {
-                    dispatch(editCoordsByIndex({index, x: obj.x + dx, y: obj.y}));
-                    dispatch(resizeObject({index, width: obj.width - dx, height: obj.height + dy}));
-                }
+                dispatch(changeScale({index, x: scaleX, y: scaleY}));
             }
-            else if (dragBR)
-            {
-                const width = obj.width + dx;
-                const height = obj.height + dy;
-
-                if (width < 0 && height < 0)
-                {
-                    setDragCorner([true, false, false, false]);
-                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY * -1}));
-                }
-                else if (width < 0)
-                {
-                    setDragCorner([false, true, false, false]);
-                    dispatch(changeScale({index, x: scaleX * -1, y: scaleY}));
-                }
-                else if (height < 0)
-                {
-                    setDragCorner([false, false, true, false]);
-                    dispatch(changeScale({index, x: scaleX, y: scaleY * -1}));
-                }
-                else
-                {
-                    dispatch(editCoordsByIndex({index, x: obj.x, y: obj.y}));
-                    dispatch(resizeObject({index, width: obj.width + dx, height: obj.height + dy}));
-                }
-            }
+            
+            dx === 0 ? setDeltaX(Math.sign(deltaX)) : setDeltaX(dx);
+            dy === 0 ? setDeltaY(Math.sign(deltaY)) : setDeltaY(dy);
         });
-
-        setCoords({x: e.clientX, y: e.clientY});
     };
 
     return [mouseDown, mouseUp, mouseOut, mouseMove];

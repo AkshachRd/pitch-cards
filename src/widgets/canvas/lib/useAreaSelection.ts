@@ -2,7 +2,7 @@ import {CanvasObject} from "shared/types";
 import {useAppDispatch, useAppSelector} from "shared/hooks";
 import {MouseEvent, useState, useReducer, useEffect, useCallback} from "react";
 import { clearSelection, deselect, editSelectionCoords, resizeSelection, select, selectCanvasSelection } from "../model/canvasSlice";
-import { areRectsIntersect, isMouseInCanvasObject, isMouseInCanvasObjectCorner } from "shared/lib/canvas";
+import { areRectsIntersect, isMouseInRect, isMouseInRectCorner } from "shared/lib/canvas";
 
 const useAreaSelection = (objs: Array<CanvasObject>) => {
     const dispatch = useAppDispatch();
@@ -35,7 +35,8 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
         objs.forEach((obj, index) => {
             dispatch(clearSelection());
 
-            if (isMouseInCanvasObject(clickX, clickY, obj))
+            const objRect = (({x, y, width, height}) => ({x, y, width, height}))(obj);
+            if (isMouseInRect(clickX, clickY, objRect))
             {
                 if (!obj.selected)
                 {
@@ -51,7 +52,7 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
 
                 dragging = true;
             }
-            else if (obj.selected && isMouseInCanvasObjectCorner(clickX, clickY, obj))
+            else if (obj.selected && isMouseInRectCorner(clickX, clickY, objRect))
             {
                 dragging = true;
             }
