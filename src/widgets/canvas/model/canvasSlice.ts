@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {CanvasObject} from "shared/types/canvasObject";
 import {RootState} from "app/store";
-import {Filters} from "shared/types";
+import {Filters, Rect} from "shared/types";
 import {isArtObject} from "shared/lib/typeGuards";
 
 export interface CanvasState
@@ -9,33 +9,40 @@ export interface CanvasState
     width: number;
     height: number;
     filter: Filters;
+    selection: Rect;
     objects: Array<CanvasObject>;
 }
 
 type Index = number;
 
-export interface EditCoordsPayload
+interface Coords
 {
-    index: Index;
     x: number;
     y: number;
 }
 
-export interface ResizeObjectPayload
+export interface EditCoordsPayload extends Coords
 {
     index: Index;
+}
+
+interface Size
+{
     width: number;
     height: number;
+}
+
+export interface ResizeObjectPayload extends Size
+{
+    index: Index;
 }
 
 type SelectPayload = Index;
 type DeselectPayload = Index;
 
-interface ChangeScalePayload
+interface ChangeScalePayload extends Coords
 {
     index: number;
-    x: number;
-    y: number;
 }
 
 interface SetObjectSelectionByIdPayload
@@ -44,13 +51,12 @@ interface SetObjectSelectionByIdPayload
     selected: boolean;
 }
 
-interface ResizeCanvasPayload
-{
-    width: number;
-    height: number;
-}
+interface ResizeCanvasPayload extends Size {}
+interface ResizeSelectionPayload extends Size {}
+interface EditSelectionCoordsPayload extends Coords {}
 
 const initialState: CanvasState = {
+    selection: {x: 0, y: 0, width: 0, height: 0},
     filter: Filters.None,
     width: Number(process.env.REACT_APP_CANVAS_WIDTH),
     height: Number(process.env.REACT_APP_CANVAS_HEIGHT),
@@ -142,6 +148,23 @@ export const canvasSlice = createSlice({
         resizeCanvas: (state, action: PayloadAction<ResizeCanvasPayload>) => {
             state.width = action.payload.width;
             state.height = action.payload.height;
+        },
+        resizeSelection: (state, action: PayloadAction<ResizeSelectionPayload>) => {
+            const selection = state.selection;
+            selection.width = action.payload.width;
+            selection.height = action.payload.height;
+        },
+        editSelectionCoords: (state, action: PayloadAction<EditSelectionCoordsPayload>) => {
+            const selection = state.selection;
+            selection.x = action.payload.x;
+            selection.y = action.payload.y;
+        },
+        clearSelection: (state) => {
+            const selection = state.selection;
+            selection.x = 0;
+            selection.y = 0;
+            selection.width = 0;
+            selection.height = 0;
         }
     }
 })
@@ -159,13 +182,17 @@ export const {
     changeFilter,
     select,
     deselect,
-    resizeCanvas
+    resizeCanvas,
+    resizeSelection,
+    editSelectionCoords,
+    clearSelection
 } = canvasSlice.actions;
 export const selectCanvasObjects = (state: RootState) => state.canvas.objects;
 export const selectCanvasSize = (state: RootState) => ({
     width: state.canvas.width,
     height: state.canvas.height
 });
+export const selectCanvasSelection = (state: RootState) => state.canvas.selection;
 export const selectCanvasState = (state: RootState) => state.canvas;
 export const selectCanvasFilter = (state: RootState) => state.canvas.filter;
 export default canvasSlice.reducer;

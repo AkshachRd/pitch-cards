@@ -19,7 +19,3 @@ export const isTextObject = (obj: CanvasObject | TextObject): obj is TextObject 
         (obj as TextObject).fontSize !== undefined &&
         (obj as TextObject).color !== undefined;
 }
-
-export const isAreaSelectionObject = (obj: CanvasObject) => {
-    return obj.type === CanvasObjectTypes.Selection;
-}

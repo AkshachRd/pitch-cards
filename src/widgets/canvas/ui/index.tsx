@@ -1,5 +1,5 @@
 import {useEffect, useRef, MouseEvent} from "react";
-import {applyFilter, drawCanvasObjects} from "../lib";
+import {applyFilter, drawCanvasObjects, drawSelectionLines} from "../lib";
 import {useAppSelector} from "shared/hooks";
 import {selectCanvasState} from "../model/canvasSlice";
 import useDragNDrop from "../lib/useDragAndDrop";
@@ -11,6 +11,7 @@ export const Canvas = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const state = useAppSelector(selectCanvasState);
     const canvasObjects = state.objects;
+    const selection = state.selection;
     const filter = state.filter;
     const [mouseDownDragNDrop, mouseUpDragNDrop, mouseOutDragNDrop, mouseMoveDragNDrop] = useDragNDrop(canvasObjects);
     const [mouseDownResize, mouseUpResize, mouseOutResize, mouseMoveResize] = useResize(canvasObjects);
@@ -51,8 +52,9 @@ export const Canvas = () => {
         if (!context) throw new Error("Context is not assigned");
 
         drawCanvasObjects(context, canvasObjects);
+        drawSelectionLines(context, selection);
         applyFilter(context, filter, 0.7);
-    }, [canvasObjects, filter]);
+    }, [canvasObjects, selection, filter]);
 
     return (
         <div className="canvas">

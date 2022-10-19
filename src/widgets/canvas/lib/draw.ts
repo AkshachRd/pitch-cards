@@ -1,5 +1,5 @@
-import {ArtObject, CanvasObject, CanvasObjectTypes, ImageObject, Shapes, TextObject} from "shared/types";
-import {isAreaSelectionObject, isArtObject, isImageObject, isTextObject} from "shared/lib/typeGuards";
+import {ArtObject, CanvasObject, CanvasObjectTypes, ImageObject, Rect, Shapes, TextObject} from "shared/types";
+import {isArtObject, isImageObject, isTextObject} from "shared/lib/typeGuards";
 
 const pattern = [10, 10];
 
@@ -10,16 +10,12 @@ export const drawCanvasObjects = (ctx: CanvasRenderingContext2D,
     const { width, height } = ctx.canvas.getBoundingClientRect();
     ctx.clearRect(0, 0, width, height);
     objs.forEach((obj) => {
+        const rect = (({x, y, width, height}) => ({x, y, width, height}))(obj);
         drawCanvasObject(ctx, obj);
         if (obj.selected)
         {
-            drawSelectionLines(ctx, obj, pattern);
-            drawDragCorners(ctx, obj, CORNER_SIDE_LENGTH, cornerColor);
-        }
-
-        if (isAreaSelectionObject(obj))
-        {
-            drawSelectionLines(ctx, obj, pattern);
+            drawSelectionLines(ctx, rect);
+            drawDragCorners(ctx, rect, CORNER_SIDE_LENGTH, cornerColor);
         }
     })
 };
@@ -67,8 +63,6 @@ const drawCanvasObject = (ctx: CanvasRenderingContext2D, obj: CanvasObject) => {
                 drawTextObject(ctx, obj);
             }
             break;
-        case CanvasObjectTypes.Selection:
-            break;
     }
 
     ctx.restore();
@@ -110,32 +104,32 @@ const drawTextObject = (ctx: CanvasRenderingContext2D, obj: TextObject) => {
     ctx.fillText(obj.content, obj.x, obj.y + contentHeight, obj.width);
 };
 
-const drawSelectionLines = (ctx: CanvasRenderingContext2D, obj: CanvasObject, pattern: Array<number>) => {
+export const drawSelectionLines = (ctx: CanvasRenderingContext2D, rect: Rect) => {
     ctx.save();
 
     ctx.beginPath();
     ctx.setLineDash(pattern);
-    ctx.moveTo(obj.x, obj.y);
-    ctx.lineTo(obj.x + obj.width, obj.y);
-    ctx.lineTo(obj.x + obj.width, obj.y + obj.height);
-    ctx.lineTo(obj.x, obj.y + obj.height);
-    ctx.lineTo(obj.x, obj.y);
+    ctx.moveTo(rect.x, rect.y);
+    ctx.lineTo(rect.x + rect.width, rect.y);
+    ctx.lineTo(rect.x + rect.width, rect.y + rect.height);
+    ctx.lineTo(rect.x, rect.y + rect.height);
+    ctx.lineTo(rect.x, rect.y);
     ctx.stroke();
 
     ctx.restore();
 };
 
-const drawDragCorners = (ctx: CanvasRenderingContext2D, obj: CanvasObject, side: number, color: string) => {
+const drawDragCorners = (ctx: CanvasRenderingContext2D, rect: Rect, side: number, color: string) => {
     ctx.save();
 
-    const x = obj.x - side / 2;
-    const y = obj.y - side / 2;
+    const x = rect.x - side / 2;
+    const y = rect.y - side / 2;
 
     ctx.fillStyle = color;
     ctx.fillRect(x, y, side, side);
-    ctx.fillRect(x, y + obj.height, side, side);
-    ctx.fillRect(x + obj.width, y, side, side);
-    ctx.fillRect(x + obj.width, y + obj.height, side, side);
+    ctx.fillRect(x, y + rect.height, side, side);
+    ctx.fillRect(x + rect.width, y, side, side);
+    ctx.fillRect(x + rect.width, y + rect.height, side, side);
 
     ctx.restore();
 };

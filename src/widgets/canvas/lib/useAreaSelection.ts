@@ -1,38 +1,39 @@
 import {CanvasObject} from "shared/types";
-import {useAppDispatch} from "shared/hooks";
-import {MouseEvent, useState, useReducer, useEffect} from "react";
-import { add, deselect, editCoordsByIndex, remove, resizeObject, select } from "../model/canvasSlice";
-import { createSelectionArea, areObjsIntersect, isMouseInCanvasObject, isMouseInCanvasObjectCorner } from "shared/lib/canvas";
-import { isAreaSelectionObject } from "shared/lib/typeGuards";
+import {useAppDispatch, useAppSelector} from "shared/hooks";
+import {MouseEvent, useState, useReducer, useEffect, useCallback} from "react";
+import { clearSelection, deselect, editSelectionCoords, resizeSelection, select, selectCanvasSelection } from "../model/canvasSlice";
+import { areRectsIntersect, isMouseInCanvasObject, isMouseInCanvasObjectCorner } from "shared/lib/canvas";
 
 const useAreaSelection = (objs: Array<CanvasObject>) => {
     const dispatch = useAppDispatch();
+    const selection = useAppSelector(selectCanvasSelection);
     const [coords, setCoords] = useState({x: 0, y: 0});
     const [selectingArea, toggleSelectingArea] = useReducer((state) => !state, false);
-    const [areaSelectionObj, setAreaSelectionObj] = useState<CanvasObject | null>(null);
     const [selectedIndexes, setSelectedIndexes] = useState<Array<number>>([]);
 
     const addSelectedIndex = (index: number) => {
         setSelectedIndexes((current) => [...current, index]);
     };
 
+    const isObjIndexInSelectedIndexes = useCallback((index: number) => {
+        return selectedIndexes.indexOf(index) > -1;
+    }, [selectedIndexes]);
+    
+
     const mouseDown = (e: MouseEvent<HTMLCanvasElement>) => {
         e.preventDefault();
 
         e.currentTarget.style.cursor = 'pointer';
-        setCoords({x: e.clientX, y: e.clientY});
 
         const rect = e.currentTarget.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const clickY = e.clientY - rect.top;
+        setCoords({x: clickX, y: clickY});
 
         let dragging = false;
 
         objs.forEach((obj, index) => {
-            if (isAreaSelectionObject(obj))
-            {
-                dispatch(remove(obj.id));
-            }
+            dispatch(clearSelection());
 
             if (isMouseInCanvasObject(clickX, clickY, obj))
             {
@@ -42,7 +43,7 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
                     {
                         addSelectedIndex(index);
                     }
-                    else if (selectedIndexes.indexOf(index) <= -1)
+                    else if (!isObjIndexInSelectedIndexes(index))
                     {
                         setSelectedIndexes([index]);
                     }
@@ -50,7 +51,7 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
 
                 dragging = true;
             }
-            else if (isMouseInCanvasObjectCorner(clickX, clickY, obj))
+            else if (obj.selected && isMouseInCanvasObjectCorner(clickX, clickY, obj))
             {
                 dragging = true;
             }
@@ -59,9 +60,7 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
         if (!dragging)
         {
             setSelectedIndexes([]);
-            const area = createSelectionArea(clickX, clickY);
-            setAreaSelectionObj(area);
-            dispatch(add(area));
+            dispatch(editSelectionCoords({x: clickX, y: clickY}));
             toggleSelectingArea();
         }
     };
@@ -72,19 +71,12 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
         e.preventDefault();
 
         let selectedObjsIndexes: Array<number> = [];
-
-        if (areaSelectionObj)
-        {
-            objs.forEach((obj, index) => {
-                if (!isAreaSelectionObject(obj))
-                {
-                    if (areObjsIntersect(areaSelectionObj, obj))
-                    {
-                        selectedObjsIndexes = [...selectedObjsIndexes, index];
-                    }
-                }
-            });
-        }
+        objs.forEach((obj, index) => {
+            if (areRectsIntersect(selection, obj))
+            {
+                selectedObjsIndexes = [...selectedObjsIndexes, index];
+            }
+        });
 
         setSelectedIndexes(selectedObjsIndexes);
 
@@ -102,30 +94,36 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
         const rect = e.currentTarget.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const clickY = e.clientY - rect.top;
-        const dx = e.clientX - coords.x;
-        const dy = e.clientY - coords.y;
 
-        objs.forEach((obj, index) => {
-            if (isAreaSelectionObject(obj))
-            {
-                dispatch(editCoordsByIndex({index, x: Math.min(obj.x, clickX), y: Math.min(obj.y, clickY)}));
-                dispatch(resizeObject({index, 
-                    width: obj.x < clickX ? obj.width + dx : obj.width - dx, 
-                    height: obj.y < clickY ? obj.height + dy : obj.height - dy
-                }));
-                setAreaSelectionObj(obj);
-            }
-        });
+        const x = Math.min(coords.x, clickX);
+        const y = Math.min(coords.y, clickY);
+        const width = Math.abs(coords.x - clickX);
+        const height = Math.abs(coords.y - clickY);
 
-        setCoords({x: e.clientX, y: e.clientY});
+        if (selection.x !== x || selection.y !== y)
+        {
+            dispatch(editSelectionCoords({x, y}));
+        }
+        if (selection.width !== width || selection.height !== height)
+        {
+            dispatch(resizeSelection({width, height}));
+        }
     };
 
     useEffect(() => {
-        objs.forEach((_, index) => {
-            selectedIndexes.indexOf(index) > -1 ?
-                dispatch(select(index)) : dispatch(deselect(index));
+        objs.forEach((obj, index) => {
+            if (isObjIndexInSelectedIndexes(index))
+            {
+                if (obj.selected) return;
+                dispatch(select(index));
+            }
+            else
+            {
+                if (!obj.selected) return;
+                dispatch(deselect(index));
+            }
         });
-    }, [selectedIndexes, objs, dispatch]);
+    }, [selectedIndexes, objs, dispatch, isObjIndexInSelectedIndexes]);
 
     return [mouseDown, mouseUp, mouseOut, mouseMove];
 };

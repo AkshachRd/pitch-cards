@@ -3,3 +3,4 @@ export * from "./artObject";
 export * from "./imageObject";
 export * from "./textObject";
 export * from "./filters";
+export * from "./rect";
