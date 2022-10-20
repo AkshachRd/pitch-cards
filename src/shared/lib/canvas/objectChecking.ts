@@ -32,3 +32,7 @@ export const areRectsIntersect = (objA: Rect, objB: Rect) => {
         objB.y > objA.y + objA.height ||
         objB.y + objB.height < objA.y);
 };
+
+export const isSelectionClear = (selection: Rect) => {
+    return Object.values(selection).every((value) => value === 0);
+};
