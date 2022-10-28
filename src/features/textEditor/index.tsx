@@ -1,10 +1,10 @@
 import {SyntheticEvent} from "react";
-import { useAppDispatch } from "shared/hooks";
-import { createText } from "shared/lib/canvas";
-import { FontFamily, FontStyle } from "shared/types";
+import {useAppDispatch} from "shared/hooks";
+import {createText} from "shared/lib/canvas";
+import {FontFamily, FontStyle, FontWeight} from "shared/types";
 import {v4 as uuid4v} from "uuid";
-import { add } from "widgets/canvas/model/canvasSlice";
-import { getFontFamilyName } from "./lib";
+import {add} from "widgets/canvas/model/canvasSlice";
+import {getFontFamilyName} from "shared/lib";
 
 const TextEditor = () => {
     const dispatch = useAppDispatch();
@@ -16,16 +16,18 @@ const TextEditor = () => {
             color: {value: string},
             fontFamily: {value: FontFamily},
             fontSize: {value: number},
-            style: {value: FontStyle}
+            fontStyle: {value: FontStyle},
+            fontWeight: {value: FontWeight}
         };
 
         const content = target.content.value;
         const color = target.color.value;
         const fontFamily = target.fontFamily.value;
         const fontSize = target.fontSize.value;
-        const style = target.style.value;
+        const fontStyle = target.fontStyle.value;
+        const fontWeight = target.fontWeight.value;
 
-        const textObj = createText(uuid4v(), content, fontFamily, fontSize, color, style);
+        const textObj = createText(uuid4v(), content, fontFamily, fontSize, color, fontStyle, fontWeight);
         dispatch(add(textObj));
     };
 
@@ -37,14 +39,17 @@ const TextEditor = () => {
                 <select name="fontFamily">
                     {Object.values(FontFamily).map((fontFamily) => {
                         const fontName = getFontFamilyName(fontFamily);
-                        return <option key={fontName}>{fontName}</option>;
+                        return <option key={fontName} value={fontFamily}>{fontName}</option>;
                     })}
                 </select>
                 <input type="number" name="fontSize" defaultValue={12}/>
-                <select name="style">
-                    {Object.keys(FontStyle).filter((style) => isNaN(Number(style))).map((fontStyle) => 
-                        <option key={fontStyle}>{fontStyle}</option>
-                    )}
+                <select name="fontStyle">
+                    <option value={FontStyle.Normal}>Normal</option>
+                    <option value={FontStyle.Italic}>Italic</option>
+                </select>
+                <select name="fontWeight">
+                    <option value={FontWeight.Normal}>Normal</option>
+                    <option value={FontWeight.Bold}>Bold</option>
                 </select>
                 <button type="submit">Add</button>
             </form>
