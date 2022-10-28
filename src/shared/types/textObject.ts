@@ -15,6 +15,11 @@ export enum FontFamily {
 export enum FontStyle {
     Normal = "",
     Italic = "italic",
+    Oblique = "oblique"
+}
+
+export enum FontWeight {
+    Normal = 400,
     Bold = 700
 }
 
@@ -24,5 +29,6 @@ export interface TextObject extends CanvasObject
     fontFamily: FontFamily;
     fontSize: number;
     color: string;
-    style: FontStyle;
+    fontStyle: FontStyle;
+    fontWeight: FontWeight;
 }

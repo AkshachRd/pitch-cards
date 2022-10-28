@@ -1,4 +1,13 @@
-import {ArtObject, CanvasObjectTypes, FontFamily, FontStyle, ImageObject, Shapes, TextObject} from "shared/types";
+import {
+    ArtObject,
+    CanvasObjectTypes,
+    FontFamily,
+    FontStyle,
+    FontWeight,
+    ImageObject,
+    Shapes,
+    TextObject
+} from "shared/types";
 
 export const createRect = (id: string): ArtObject => {
     return {
@@ -65,7 +74,8 @@ export const createText = (
     fontFamily: FontFamily, 
     fontSize: number, 
     color: string,
-    style: FontStyle
+    fontStyle: FontStyle,
+    fontWeight: FontWeight
 ): TextObject => {
     return {
         id: id,
@@ -80,6 +90,7 @@ export const createText = (
         fontFamily,
         fontSize,
         color,
-        style
+        fontStyle,
+        fontWeight
     };
 }

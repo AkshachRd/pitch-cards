@@ -97,7 +97,7 @@ const drawImageObject = (ctx: CanvasRenderingContext2D, obj: ImageObject) => {
 };
 
 const drawTextObject = (ctx: CanvasRenderingContext2D, obj: TextObject) => {
-    ctx.font = `${obj.style} ${obj.fontSize}px ${obj.fontFamily}`;
+    ctx.font = `${obj.fontStyle} ${obj.fontWeight} ${obj.fontSize}px ${obj.fontFamily}`;
     ctx.fillStyle = obj.color;
     const metrics = ctx.measureText(obj.content);
     const contentHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
