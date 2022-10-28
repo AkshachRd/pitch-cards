@@ -1,19 +1,20 @@
 interface ColorPickerProps
 {
-    disabled: boolean;
-    value: string;
-    action: (color: string) => void;
+    disabled?: boolean;
+    value?: string;
+    name?: string;
+    onChange?: (value: string) => void;
 }
 
-const ColorPicker = ({disabled, value, action}: ColorPickerProps) => {
+const ColorPicker = ({disabled, value = "#000", onChange, name}: ColorPickerProps) => {
     return (
         <input
             disabled={disabled}
-            id={"head"}
             type="color"
+            name={name}
             value={value}
             onChange={(e) => {
-                action(e.target.value);
+                onChange && onChange(e.target.value);
             }}
         />
     )
