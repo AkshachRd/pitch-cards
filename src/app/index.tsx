@@ -1,10 +1,11 @@
 import React, {useReducer} from "react";
 import {withProviders} from "./providers";
-import Header from "../widgets/header/ui";
-import {Canvas} from "../widgets/canvas";
+import Header from "widgets/header/ui";
+import {Canvas} from "widgets/canvas";
 import "./index.css";
-import Settings from "../widgets/settings";
+import Settings from "widgets/settings";
 import ImageUploader from "features/imageUploader/ui";
+import PropertiesEditor from "../widgets/propertiesEditor";
 
 const App = () => {
     const [settings, toggleSettings] = useReducer((state) => !state, false);
@@ -19,6 +20,7 @@ const App = () => {
             <Canvas/>
             {settings && <Settings toggle={toggleSettings}/>}
             {imageUploader && <ImageUploader toggle={toggleImageUploader}/>}
+            <PropertiesEditor/>
         </div>
     )
 }

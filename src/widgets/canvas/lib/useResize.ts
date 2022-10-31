@@ -103,7 +103,7 @@ const useResize = (objs: Array<CanvasObject>) => {
             }
             if (obj.width !== width || obj.height !== height)
             {
-                dispatch(resizeObject({index, width, height}));
+                dispatch(resizeObject({id: obj.id, width, height}));
             }
             if (obj.scale.x !== scaleX || obj.scale.y !== scaleY)
             {

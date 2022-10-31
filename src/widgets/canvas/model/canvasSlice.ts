@@ -1,8 +1,8 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {CanvasObject} from "shared/types/canvasObject";
 import {RootState} from "app/store";
-import {Filters, Rect} from "shared/types";
-import {isArtObject} from "shared/lib/typeGuards";
+import {Filters, FontFamily, FontStyle, FontWeight, Rect} from "shared/types";
+import {isArtObject, isTextObject} from "shared/lib/typeGuards";
 
 export interface CanvasState
 {
@@ -14,6 +14,7 @@ export interface CanvasState
 }
 
 type Index = number;
+type Id = string;
 
 interface Coords
 {
@@ -26,15 +27,20 @@ export interface EditCoordsPayload extends Coords
     index: Index;
 }
 
+interface EditCoordsByIdPayload extends Coords
+{
+    id: Id;
+}
+
 interface Size
 {
     width: number;
     height: number;
 }
 
-export interface ResizeObjectPayload extends Size
+interface ResizeObjectPayload extends Size
 {
-    index: Index;
+    id: Id;
 }
 
 type SelectPayload = Index;
@@ -54,6 +60,36 @@ interface SetObjectSelectionByIdPayload
 interface ResizeCanvasPayload extends Size {}
 interface ResizeSelectionPayload extends Size {}
 interface EditSelectionCoordsPayload extends Coords {}
+
+interface ChangeColorPayload
+{
+    id: Id;
+    color: string;
+}
+
+interface ChangeFontFamilyPayload
+{
+    id: Id;
+    fontFamily: FontFamily;
+}
+
+interface ChangeFontStylePayload
+{
+    id: Id;
+    fontStyle: FontStyle;
+}
+
+interface ChangeFontSizePayload
+{
+    id: Id;
+    fontSize: number;
+}
+
+interface ChangeFontWeightPayload
+{
+    id: Id;
+    fontWeight: FontWeight;
+}
 
 const initialState: CanvasState = {
     selection: {x: 0, y: 0, width: 0, height: 0},
@@ -96,21 +132,63 @@ export const canvasSlice = createSlice({
                 obj.y = action.payload.y;
             }
         },
-        resizeObject: (state, action: PayloadAction<ResizeObjectPayload>) => {
-            const obj = state.objects[action.payload.index];
-            if (obj)
-            {
-                obj.width = action.payload.width;
-                obj.height = action.payload.height;
-            }
+        editCoordsById: (state, action: PayloadAction<EditCoordsByIdPayload>) => {
+            const obj = state.objects.find((obj) => obj.id === action.payload.id);
+
+            if (!obj) throw new Error("editCoordsById: object with this id doesn't exist");
+
+            obj.x = action.payload.x;
+            obj.y = action.payload.y;
         },
-        editColor: (state, action: PayloadAction<string>) => {
-            state.objects.forEach((obj) => {
-                if (obj.selected && isArtObject(obj))
-                {
-                    obj.color = action.payload;
-                }
-            });
+        resizeObject: (state, action: PayloadAction<ResizeObjectPayload>) => {
+            const obj = state.objects.find((obj) => obj.id === action.payload.id);
+
+            if (!obj) throw new Error("resizeObject: object with this id doesn't exist");
+
+            const {width, height} = action.payload;
+            obj.width = width;
+            obj.height = height;
+        },
+        changeColor: (state, action: PayloadAction<ChangeColorPayload>) => {
+            const obj = state.objects.find((obj) => obj.id === action.payload.id);
+
+            if (!obj) throw new Error("changeColor: object with this id doesn't exist");
+            if (!(isArtObject(obj) || isTextObject(obj)))
+                throw new Error("changeColor: only text and art objects have color property");
+
+            obj.color = action.payload.color;
+        },
+        changeFontFamily: (state, action: PayloadAction<ChangeFontFamilyPayload>) => {
+            const obj = state.objects.find((obj) => obj.id === action.payload.id);
+
+            if (!obj) throw new Error("changeFontFamily: object with this id doesn't exist");
+            if (!isTextObject(obj)) throw new Error("changeFontFamily: only text objects have fontFamily property");
+
+            obj.fontFamily = action.payload.fontFamily;
+        },
+        changeFontStyle: (state, action: PayloadAction<ChangeFontStylePayload>) => {
+            const obj = state.objects.find((obj) => obj.id === action.payload.id);
+
+            if (!obj) throw new Error("changeFontStyle: object with this id doesn't exist");
+            if (!isTextObject(obj)) throw new Error("changeFontStyle: only text objects have fontStyle property");
+
+            obj.fontStyle = action.payload.fontStyle;
+        },
+        changeFontSize: (state, action: PayloadAction<ChangeFontSizePayload>) => {
+            const obj = state.objects.find((obj) => obj.id === action.payload.id);
+
+            if (!obj) throw new Error("changeFontSize: object with this id doesn't exist");
+            if (!isTextObject(obj)) throw new Error("changeFontSize: only text objects have fontSize property");
+
+            obj.fontSize = action.payload.fontSize;
+        },
+        changeFontWeight: (state, action: PayloadAction<ChangeFontWeightPayload>) => {
+            const obj = state.objects.find((obj) => obj.id === action.payload.id);
+
+            if (!obj) throw new Error("changeFontWeight: object with this id doesn't exist");
+            if (!isTextObject(obj)) throw new Error("changeFontWeight: only text objects have fontWeight property");
+
+            obj.fontWeight = action.payload.fontWeight;
         },
         setObjectSelectionById: (state, action: PayloadAction<SetObjectSelectionByIdPayload>) => {
             const obj = state.objects.find((obj) => obj.id === action.payload.id);
@@ -175,7 +253,11 @@ export const {
     editCoords,
     editCoordsByIndex,
     resizeObject,
-    editColor,
+    changeColor,
+    changeFontFamily,
+    changeFontStyle,
+    changeFontSize,
+    changeFontWeight,
     deselectObjects,
     setObjectSelectionById,
     changeScale,
@@ -185,7 +267,8 @@ export const {
     resizeCanvas,
     resizeSelection,
     editSelectionCoords,
-    clearSelection
+    clearSelection,
+    editCoordsById
 } = canvasSlice.actions;
 export const selectCanvasObjects = (state: RootState) => state.canvas.objects;
 export const selectCanvasSize = (state: RootState) => ({
