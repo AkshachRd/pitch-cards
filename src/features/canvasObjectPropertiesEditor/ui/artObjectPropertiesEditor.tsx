@@ -1,7 +1,7 @@
-import ColorPicker from "../../colorPicker";
+import ColorPicker from "features/colorPicker";
 import {useEffect, useState} from "react";
 import {ArtObject} from "shared/types";
-import {changeColor} from "widgets/canvas/model/canvasSlice";
+import {changeColor} from "widgets/canvas/model/canvasObjectsSlice";
 import {useAppDispatch} from "shared/hooks";
 
 interface ArtObjectPropertiesEditorProps
@@ -18,7 +18,7 @@ const ArtObjectPropertiesEditor = ({artObj}: ArtObjectPropertiesEditorProps) => 
 
     useEffect(() => {
         dispatch(changeColor({id, color}))
-    }, [color, dispatch, id]);
+    }, [color]);
 
     return (
         <ColorPicker name="artObjectColor" onChange={(color) => setColor(color)}/>

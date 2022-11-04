@@ -1,10 +1,11 @@
 import {MouseEvent, ChangeEvent, useState, useReducer} from "react";
 import { useAppDispatch, useAppSelector } from "shared/hooks";
 import { createImage } from "shared/lib/canvas";
-import { add, resizeCanvas, selectCanvasSize } from "widgets/canvas/model/canvasSlice";
+import {resize, selectCanvasSize} from "widgets/canvas/model/canvasSlice";
 import {v4 as uuid4v} from "uuid";
 import PopUp from "features/popUp";
 import { convertToBase64, isImgBiggerThanCanvas } from "../lib";
+import {add} from "widgets/canvas/model/canvasObjectsSlice";
 
 interface ImageUploaderProps
 {
@@ -61,7 +62,7 @@ const ImageUploader = ({toggle}: ImageUploaderProps) => {
         if (!currImg) throw new Error("currImg is not assigned");
 
         const img = createImage(uuid4v(), currImg.naturalWidth, currImg.naturalHeight, baseImage);
-        dispatch(resizeCanvas({width: currImg.naturalWidth, height: currImg.naturalHeight}));
+        dispatch(resize({width: currImg.naturalWidth, height: currImg.naturalHeight}));
         dispatch(add(img));
         toggle();
     };

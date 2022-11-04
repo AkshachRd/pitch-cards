@@ -9,7 +9,7 @@ import {
     changeFontSize,
     changeFontStyle,
     changeFontWeight
-} from "widgets/canvas/model/canvasSlice";
+} from "widgets/canvas/model/canvasObjectsSlice";
 import {useAppDispatch} from "shared/hooks";
 import FontStyleInput from "entities/fontStyleInput";
 
@@ -31,23 +31,23 @@ const TextObjectPropertiesEditor = ({textObj}: TextObjectPropertiesEditorProps) 
 
     useEffect(() => {
         dispatch(changeColor({id, color}))
-    }, [color, dispatch, id]);
+    }, [color]);
 
     useEffect(() => {
         dispatch(changeFontFamily({id, fontFamily}));
-    }, [fontFamily, dispatch, id]);
+    }, [fontFamily]);
 
     useEffect(() => {
         dispatch(changeFontStyle({id, fontStyle}));
-    }, [fontStyle, dispatch, id]);
+    }, [fontStyle]);
 
     useEffect(() => {
         dispatch(changeFontWeight({id, fontWeight}));
-    }, [fontWeight, dispatch, id]);
+    }, [fontWeight]);
 
     useEffect(() => {
         dispatch(changeFontSize({id, fontSize}));
-    }, [fontSize, dispatch, id]);
+    }, [fontSize]);
 
     const handleFontFamilyChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const fontFamily = e.target.value;

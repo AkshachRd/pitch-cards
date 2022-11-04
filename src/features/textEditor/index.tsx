@@ -3,7 +3,7 @@ import {useAppDispatch} from "shared/hooks";
 import {createText} from "shared/lib/canvas";
 import {FontFamily, FontStyle, FontWeight} from "shared/types";
 import {v4 as uuid4v} from "uuid";
-import {add} from "widgets/canvas/model/canvasSlice";
+import {add} from "widgets/canvas/model/canvasObjectsSlice";
 import {getFontFamilyName} from "shared/lib";
 
 const TextEditor = () => {

@@ -6,13 +6,14 @@ import useDragNDrop from "../lib/useDragAndDrop";
 import "./styles.css";
 import useResize from "../lib/useResize";
 import useAreaSelection from "../lib/useAreaSelection";
+import {selectCanvasObjectsState} from "../model/canvasObjectsSlice";
+import {selectSelection} from "../model/selectionSlice";
 
 export const Canvas = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const state = useAppSelector(selectCanvasState);
-    const canvasObjects = state.objects;
-    const selection = state.selection;
-    const filter = state.filter;
+    const canvasObjects = useAppSelector(selectCanvasObjectsState);
+    const selection = useAppSelector(selectSelection);
+    const {width: canvasWidth, height: canvasHeight, filter} = useAppSelector(selectCanvasState);
     const [mouseDownDragNDrop, mouseUpDragNDrop, mouseOutDragNDrop, mouseMoveDragNDrop] = useDragNDrop(canvasObjects);
     const [mouseDownResize, mouseUpResize, mouseOutResize, mouseMoveResize] = useResize(canvasObjects);
     const [mouseDownAreaSelection, 
@@ -60,8 +61,8 @@ export const Canvas = () => {
         <div className="canvas">
             <canvas
                 ref={canvasRef}
-                width={state.width}
-                height={state.height}
+                width={canvasWidth}
+                height={canvasHeight}
                 onMouseDown={mouseDown}
                 onMouseUp={mouseUp}
                 onMouseOut={mouseOut}

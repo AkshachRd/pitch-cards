@@ -1,7 +1,7 @@
 import {MouseEvent, useReducer, useState} from "react";
 import {CanvasObject} from "shared/types";
 import {useAppDispatch} from "shared/hooks";
-import {editCoords, EditCoordsPayload, } from "../model/canvasSlice";
+import {editCoords} from "../model/canvasObjectsSlice";
 import {isMouseInRect, isMouseInRectCorner} from "shared/lib/canvas";
 
 const useDragNDrop = (objs: Array<CanvasObject>) => {
@@ -47,14 +47,12 @@ const useDragNDrop = (objs: Array<CanvasObject>) => {
         const dx = mouseX - coords.x;
         const dy = mouseY - coords.y;
 
-        const arr = objs.reduce<Array<EditCoordsPayload>>((filtered, obj, index) => {
+        objs.forEach((obj) => {
             if (obj.selected)
             {
-                filtered.push({index, x: obj.x + dx, y: obj.y + dy});
+                dispatch(editCoords({id: obj.id, x: obj.x + dx, y: obj.y + dy}));
             }
-            return filtered;
-        }, []);
-        dispatch(editCoords(arr));
+        });
         setCoords({x: mouseX, y: mouseY});
     };
 

@@ -1,6 +1,6 @@
 import {ReactNode} from "react";
 import {useAppDispatch} from "shared/hooks";
-import {add, changeFilter} from "../../canvas/model/canvasSlice";
+import {changeFilter} from "widgets/canvas/model/canvasSlice";
 import {Filters} from "shared/types";
 import Menu from "features/menu";
 import Icon, {IconNames} from "shared/icons";
@@ -9,6 +9,7 @@ import {createCircle, createRect, createTriangle} from "shared/lib/canvas";
 import MenuItem from "entities/menuItem";
 import TextEditor from "features/textEditor";
 import "./styles.css";
+import {add} from "widgets/canvas/model/canvasObjectsSlice";
 
 interface HeaderProps
 {

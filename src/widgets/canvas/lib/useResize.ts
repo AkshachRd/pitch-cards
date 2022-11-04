@@ -1,7 +1,7 @@
 import {MouseEvent, useReducer, useState} from "react";
 import {CanvasObject} from "shared/types";
 import {useAppDispatch} from "shared/hooks";
-import {changeScale, editCoordsByIndex, resizeObject} from "../model/canvasSlice";
+import {changeScale, editCoords, resize} from "../model/canvasObjectsSlice";
 import {isMouseInCorner} from "shared/lib/canvas";
 
 const useResize = (objs: Array<CanvasObject>) => {
@@ -84,7 +84,7 @@ const useResize = (objs: Array<CanvasObject>) => {
         const clickX = e.clientX - canvasRect.left;
         const clickY = e.clientY - canvasRect.top;
 
-        objs.forEach((obj, index) => {
+        objs.forEach((obj) => {
             if (!obj.selected) return;
 
             const x = Math.min(coords.x, clickX);
@@ -99,15 +99,15 @@ const useResize = (objs: Array<CanvasObject>) => {
 
             if (obj.x !== x || obj.y !== y)
             {
-                dispatch(editCoordsByIndex({index, x, y}));
+                dispatch(editCoords({id: obj.id, x, y}));
             }
             if (obj.width !== width || obj.height !== height)
             {
-                dispatch(resizeObject({id: obj.id, width, height}));
+                dispatch(resize({id: obj.id, width, height}));
             }
             if (obj.scale.x !== scaleX || obj.scale.y !== scaleY)
             {
-                dispatch(changeScale({index, x: scaleX, y: scaleY}));
+                dispatch(changeScale({id: obj.id, x: scaleX, y: scaleY}));
             }
             
             dx === 0 ? setDeltaX(Math.sign(deltaX)) : setDeltaX(dx);

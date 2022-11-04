@@ -2,7 +2,7 @@ import {CanvasObject} from "shared/types";
 import DragNumInput from "entities/dragNumInput";
 import {useEffect, useState} from "react";
 import {useAppDispatch} from "shared/hooks";
-import {editCoordsById, resizeObject} from "widgets/canvas/model/canvasSlice";
+import {editCoords, resize} from "widgets/canvas/model/canvasObjectsSlice";
 import ArtObjectPropertiesEditor from "./artObjectPropertiesEditor";
 import TextObjectPropertiesEditor from "./textObjectPropertiesEditor";
 import {isArtObject, isTextObject} from "shared/lib";
@@ -21,12 +21,12 @@ const CanvasObjectPropertiesEditor = ({selectedObj}: CanvasObjectPropertiesEdito
     const [size, setSize] = useState({width, height});
 
     useEffect(() => {
-        dispatch(editCoordsById({id, x: coords.x, y: coords.y}));
-    }, [coords, dispatch, id]);
+        dispatch(editCoords({id, x: coords.x, y: coords.y}));
+    }, [coords]);
 
     useEffect(() => {
-        dispatch(resizeObject({id, width: size.width, height: size.height}))
-    }, [size, dispatch, id]);
+        dispatch(resize({id, width: size.width, height: size.height}))
+    }, [size]);
 
     const getOtherCanvasObjectProperties = (obj: CanvasObject) => {
         if (isArtObject(obj))

@@ -1,12 +1,13 @@
 import {CanvasObject} from "shared/types";
 import {useAppDispatch, useAppSelector} from "shared/hooks";
 import {MouseEvent, useState, useReducer, useEffect, useCallback} from "react";
-import { clearSelection, deselect, editSelectionCoords, resizeSelection, select, selectCanvasSelection } from "../model/canvasSlice";
+import { clear, changeCoords, resize, selectSelection } from "../model/selectionSlice";
+import {select, deselect} from "../model/canvasObjectsSlice";
 import { areRectsIntersect, isMouseInRect, isMouseInRectCorner, isSelectionClear } from "shared/lib/canvas";
 
 const useAreaSelection = (objs: Array<CanvasObject>) => {
     const dispatch = useAppDispatch();
-    const selection = useAppSelector(selectCanvasSelection);
+    const selection = useAppSelector(selectSelection);
     const [coords, setCoords] = useState({x: 0, y: 0});
     const [selectingArea, toggleSelectingArea] = useReducer((state) => !state, false);
     const [selectedIndexes, setSelectedIndexes] = useState<Array<number>>([]);
@@ -35,7 +36,7 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
         objs.forEach((obj, index) => {
             if (!isSelectionClear(selection))
             {
-                dispatch(clearSelection());
+                dispatch(clear());
             }
 
             const objRect = (({x, y, width, height}) => ({x, y, width, height}))(obj);
@@ -64,7 +65,7 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
         if (!dragging)
         {
             setSelectedIndexes([]);
-            dispatch(editSelectionCoords({x: clickX, y: clickY}));
+            dispatch(changeCoords({x: clickX, y: clickY}));
             toggleSelectingArea();
         }
     };
@@ -106,11 +107,11 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
 
         if (selection.x !== x || selection.y !== y)
         {
-            dispatch(editSelectionCoords({x, y}));
+            dispatch(changeCoords({x, y}));
         }
         if (selection.width !== width || selection.height !== height)
         {
-            dispatch(resizeSelection({width, height}));
+            dispatch(resize({width, height}));
         }
     };
 
@@ -119,12 +120,12 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
             if (isObjIndexInSelectedIndexes(index))
             {
                 if (obj.selected) return;
-                dispatch(select(index));
+                dispatch(select(obj.id));
             }
             else
             {
                 if (!obj.selected) return;
-                dispatch(deselect(index));
+                dispatch(deselect(obj.id));
             }
         });
     }, [selectedIndexes, objs, dispatch, isObjIndexInSelectedIndexes]);
