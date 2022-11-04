@@ -1,5 +1,6 @@
 import {ArtObject, CanvasObject, CanvasObjectTypes, ImageObject, Rect, Shapes, TextObject} from "shared/types";
 import {isArtObject, isImageObject, isTextObject} from "shared/lib/typeGuards";
+import {getCanvasFont} from "shared/lib";
 
 const pattern = [10, 10];
 
@@ -97,7 +98,7 @@ const drawImageObject = (ctx: CanvasRenderingContext2D, obj: ImageObject) => {
 };
 
 const drawTextObject = (ctx: CanvasRenderingContext2D, obj: TextObject) => {
-    ctx.font = `${obj.fontStyle} ${obj.fontWeight} ${obj.fontSize}px ${obj.fontFamily}`;
+    ctx.font = getCanvasFont(obj.fontStyle, obj.fontWeight, obj.fontSize, obj.fontFamily);
     ctx.fillStyle = obj.color;
     const metrics = ctx.measureText(obj.content);
     const contentHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;

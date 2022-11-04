@@ -8,6 +8,8 @@ import {
     Shapes,
     TextObject
 } from "shared/types";
+import {getCanvasFont} from "./getCanvasFont";
+import {getTextSize} from "./getTextSize";
 
 export const createRect = (id: string): ArtObject => {
     return {
@@ -77,13 +79,15 @@ export const createText = (
     fontStyle: FontStyle,
     fontWeight: FontWeight
 ): TextObject => {
+    const {width, height} = getTextSize(content, getCanvasFont(fontStyle, fontWeight, fontSize, fontFamily));
+
     return {
         id: id,
         type: CanvasObjectTypes.Text,
         x: 0,
         y: 0,
-        width: 100,
-        height: 100,
+        width: Math.ceil(width) + 10,
+        height: Math.ceil(height) + 10,
         selected: false,
         scale: {x: 1, y: 1},
         content,
