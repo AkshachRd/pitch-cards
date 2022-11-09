@@ -1,7 +1,7 @@
 import {
     ArtObject,
     CanvasObject,
-    CanvasObjectTypes,
+    CanvasObjectTypes, Filters,
     FontFamily,
     FontStyle,
     FontWeight,
@@ -38,6 +38,10 @@ export const isFontFamily = (fontFamily: string | FontFamily): fontFamily is Fon
     return Object.values(FontFamily).includes(fontFamily as FontFamily);
 };
 
-export const isFontWeight = (fontWeight: number | FontStyle): fontWeight is FontWeight => {
+export const isFontWeight = (fontWeight: number | FontWeight): fontWeight is FontWeight => {
     return fontWeight in FontWeight;
+};
+
+export const isFilter = (filter: string | Filters): filter is Filters => {
+    return filter in Filters;
 };

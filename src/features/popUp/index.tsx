@@ -5,13 +5,13 @@ import Icon, { IconNames } from "shared/icons";
 interface PopUpProps
 {
     children: ReactNode;
-    onClose: () => void;
+    onClose?: () => void;
 }
 
 const PopUp = ({children, onClose}: PopUpProps) => {
     const handleClose = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        onClose();
+        onClose && onClose();
     };
 
     const closeBtnSize = 25;
