@@ -1,7 +1,7 @@
 import {FontFamily, TextObject} from "shared/types";
 import {getFontFamilyName, isFontFamily} from "shared/lib";
 import DragNumInput from "entities/dragNumInput";
-import ColorPicker from "../../colorPicker";
+import ColorPicker from "../../../entities/colorPicker";
 import {ChangeEvent, useEffect, useState} from "react";
 import {
     changeColor,

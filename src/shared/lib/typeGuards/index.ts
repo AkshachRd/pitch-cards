@@ -43,5 +43,5 @@ export const isFontWeight = (fontWeight: number | FontWeight): fontWeight is Fon
 };
 
 export const isFilter = (filter: string | Filters): filter is Filters => {
-    return filter in Filters;
+    return Object.values(Filters).includes(filter as Filters);
 };

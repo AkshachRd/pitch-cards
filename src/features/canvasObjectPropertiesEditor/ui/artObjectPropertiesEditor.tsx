@@ -1,4 +1,4 @@
-import ColorPicker from "features/colorPicker";
+import ColorPicker from "entities/colorPicker";
 import {useEffect, useState} from "react";
 import {ArtObject} from "shared/types";
 import {changeColor} from "widgets/canvas/model/canvasObjectsSlice";
