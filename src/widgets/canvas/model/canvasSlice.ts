@@ -14,7 +14,7 @@ interface ResizePayload extends Size {}
 type ChangeTitlePayload = string;
 
 const initialState: CanvasState = {
-    title: "",
+    title: "New Card",
     filter: Filters.None,
     width: Number(process.env.REACT_APP_CANVAS_WIDTH),
     height: Number(process.env.REACT_APP_CANVAS_HEIGHT),

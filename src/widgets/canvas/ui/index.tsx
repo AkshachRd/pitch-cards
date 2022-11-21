@@ -1,5 +1,5 @@
-import {useEffect, useRef, MouseEvent} from "react";
-import {applyFilter, drawCanvasObjects, drawSelectionLines} from "../lib";
+import {useEffect, useRef, MouseEvent, useCallback} from "react";
+import {applyFilter, clearCanvas, drawBackground, drawCanvasObjects, drawSelectionLines} from "../lib";
 import {useAppSelector} from "shared/hooks";
 import {selectCanvasState} from "../model/canvasSlice";
 import useDragNDrop from "../lib/useDragAndDrop";
@@ -22,51 +22,54 @@ export const Canvas = () => {
         mouseMoveAreaSelection
     ] = useAreaSelection(canvasObjects);
 
-    const mouseDown = (e: MouseEvent<HTMLCanvasElement>) => {
+    const handleMouseDown = useCallback((e: MouseEvent<HTMLCanvasElement>) => {
         mouseDownAreaSelection(e);
         mouseDownDragNDrop(e);
         mouseDownResize(e);
-    };
+    }, [mouseDownAreaSelection, mouseDownDragNDrop, mouseDownResize]);
 
-    const mouseUp = (e: MouseEvent<HTMLCanvasElement>) => {
+    const handleMouseUp = useCallback((e: MouseEvent<HTMLCanvasElement>) => {
         mouseUpAreaSelection(e);
         mouseUpDragNDrop(e);
         mouseUpResize(e);
-    };
+    }, [mouseUpAreaSelection, mouseUpDragNDrop, mouseUpResize]);
 
-    const mouseOut = (e: MouseEvent<HTMLCanvasElement>) => {
+    const handleMouseOut = useCallback((e: MouseEvent<HTMLCanvasElement>) => {
         mouseOutAreaSelection(e);
         mouseOutDragNDrop(e);
         mouseOutResize(e);
-    };
+    }, [mouseOutAreaSelection, mouseOutDragNDrop, mouseOutResize]);
 
-    const mouseMove = (e: MouseEvent<HTMLCanvasElement>) => {
+    const handleMouseMove = useCallback((e: MouseEvent<HTMLCanvasElement>) => {
         mouseMoveAreaSelection(e);
         mouseMoveDragNDrop(e);
         mouseMoveResize(e);
-    };
+    }, [mouseMoveAreaSelection, mouseMoveDragNDrop, mouseMoveResize]);
 
     useEffect(() => {
-        if (!canvasRef.current) throw new Error("canvasRef is not assigned");
+        const context = canvasRef.current?.getContext("2d");
+        if (!context) {
+            throw new Error("Context is not assigned")
+        }
 
-        const context = canvasRef.current.getContext("2d");
-        if (!context) throw new Error("Context is not assigned");
-
+        clearCanvas(context);
+        drawBackground(context, "white");
         drawCanvasObjects(context, canvasObjects);
         drawSelectionLines(context, selection);
         applyFilter(context, filter, 0.7);
     }, [canvasObjects, selection, filter]);
 
     return (
-        <div className="canvas">
+        <div className="canvas-wrapper">
             <canvas
                 ref={canvasRef}
+                id="canvas"
                 width={canvasWidth}
                 height={canvasHeight}
-                onMouseDown={mouseDown}
-                onMouseUp={mouseUp}
-                onMouseOut={mouseOut}
-                onMouseMove={mouseMove}
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseOut={handleMouseOut}
+                onMouseMove={handleMouseMove}
             />
         </div>
     )

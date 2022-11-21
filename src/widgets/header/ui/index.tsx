@@ -10,6 +10,7 @@ import MenuItem from "entities/menuItem";
 import TextEditor from "features/textEditor";
 import "./styles.css";
 import {add} from "widgets/canvas/model/canvasObjectsSlice";
+import DropdownMenuBar from "../../../features/dropdownMenuBar";
 
 interface HeaderProps
 {
@@ -56,6 +57,7 @@ const Header = ({children}: HeaderProps) => {
                     <TextEditor />
                 </MenuItem>
             </Menu>
+            <DropdownMenuBar/>
             {children}
         </div>
     )
