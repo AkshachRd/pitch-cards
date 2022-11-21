@@ -33,12 +33,12 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
 
         let dragging = false;
 
-        objs.forEach((obj, index) => {
-            if (!isSelectionClear(selection))
-            {
-                dispatch(clear());
-            }
+        if (!isSelectionClear(selection))
+        {
+            dispatch(clear());
+        }
 
+        objs.forEach((obj, index) => {
             const objRect = (({x, y, width, height}) => ({x, y, width, height}))(obj);
             if (isMouseInRect(clickX, clickY, objRect))
             {

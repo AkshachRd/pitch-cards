@@ -31,7 +31,8 @@ const CanvasPropertiesEditor = () => {
     };
 
     return (
-        <>
+        <div>
+            <p>CANVAS</p>
             <input type="text" name="Title" value={title} onChange={(e) => setTitle(e.target.value)}/>
             <DragNumInput
                 name="Width"
@@ -57,7 +58,7 @@ const CanvasPropertiesEditor = () => {
                     )
                 })}
             </select>
-        </>
+        </div>
     )
 };
 
