@@ -8,8 +8,6 @@ export const drawCanvasObjects = (ctx: CanvasRenderingContext2D,
                                   objs: Array<CanvasObject>) => {
     const CORNER_SIDE_LENGTH = Number(process.env.REACT_APP_OBJECT_CORNER_SIDE_LENGTH);
     const cornerColor = "#000";
-    const { width, height } = ctx.canvas.getBoundingClientRect();
-    ctx.clearRect(0, 0, width, height);
     objs.forEach((obj) => {
         const rect = (({x, y, width, height}) => ({x, y, width, height}))(obj);
         drawCanvasObject(ctx, obj);
@@ -133,4 +131,17 @@ const drawDragCorners = (ctx: CanvasRenderingContext2D, rect: Rect, side: number
     ctx.fillRect(x + rect.width, y + rect.height, side, side);
 
     ctx.restore();
+};
+
+export const drawBackground = (ctx: CanvasRenderingContext2D, background: string) => {
+    ctx.save();
+
+    ctx.fillStyle = background;
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    ctx.restore();
+};
+
+export const clearCanvas = (ctx: CanvasRenderingContext2D): void => {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 };
