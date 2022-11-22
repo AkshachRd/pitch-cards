@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from "shared/hooks";
 import { createImage } from "shared/lib/canvas";
 import {resize, selectCanvasSize} from "widgets/canvas/model/canvasSlice";
 import {v4 as uuid4v} from "uuid";
-import PopUp from "features/popUp";
 import { convertToBase64, isImgBiggerThanCanvas } from "../lib";
 import {add} from "widgets/canvas/model/canvasObjectsSlice";
 
@@ -78,7 +77,7 @@ const ImageUploader = ({toggle}: ImageUploaderProps) => {
     };
 
     return (
-        <PopUp onClose={toggle}>
+        <>
             <input type="file" name="file" required={true} onChange={uploadImage} accept=".png, .jpg, .jpeg" />
             <button disabled={!baseImage || isError} onClick={handleSubmit}>Add image</button>
             {isError && <p>Can't load the image!</p>}
@@ -94,7 +93,7 @@ const ImageUploader = ({toggle}: ImageUploaderProps) => {
                     Close
                 </button>
             </div>}
-        </PopUp>
+        </>
     )
 };
 

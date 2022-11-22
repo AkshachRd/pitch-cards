@@ -1,4 +1,4 @@
-.popup
+.modal
 {
     position: fixed;
     background: rgba(0, 0, 0, 0.5);
@@ -8,7 +8,7 @@
     left: 0;
 }
 
-.popup__box
+.modal__box
 {
     position: relative;
     width: 70%;
@@ -20,13 +20,13 @@
     overflow: auto;
 }
 
-.popup__btn-bar
+.modal__btn-bar
 {
     display: flex;
     margin-bottom: 50px;
 }
 
-.popup__btn
+.modal__btn
 {
     -moz-appearance:none; /* Firefox */
     -webkit-appearance:none; /* Safari and Chrome */
@@ -43,7 +43,7 @@
     margin: 0;
 }
 
-.popup__close-btn
+.modal__close-btn
 {
     position: absolute;
     top: 20px;

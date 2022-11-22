@@ -14,7 +14,7 @@ import DropdownMenuBar from "../../../features/dropdownMenuBar";
 
 interface HeaderProps
 {
-    children: ReactNode;
+    children?: ReactNode;
 }
 
 const Header = ({children}: HeaderProps) => {
