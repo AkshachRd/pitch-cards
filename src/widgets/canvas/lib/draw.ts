@@ -61,6 +61,7 @@ const drawCanvasObject = (ctx: CanvasRenderingContext2D, obj: CanvasObject) => {
 
 const drawArtObject = (ctx: CanvasRenderingContext2D, obj: ArtObject) => {
     const {x, y, width, height, color} = obj;
+
     ctx.fillStyle = color;
     switch (obj.shape) {
         case Shapes.Rectangle:
@@ -98,15 +99,17 @@ const drawTextObject = (ctx: CanvasRenderingContext2D, obj: TextObject) => {
 };
 
 export const drawSelectionLines = (ctx: CanvasRenderingContext2D, rect: Rect) => {
+    const {x, y, width, height} = rect;
+
     ctx.save();
 
     ctx.beginPath();
     ctx.setLineDash(pattern);
-    ctx.moveTo(rect.x, rect.y);
-    ctx.lineTo(rect.x + rect.width, rect.y);
-    ctx.lineTo(rect.x + rect.width, rect.y + rect.height);
-    ctx.lineTo(rect.x, rect.y + rect.height);
-    ctx.lineTo(rect.x, rect.y);
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + width, y);
+    ctx.lineTo(x + width, y + height);
+    ctx.lineTo(x, y + height);
+    ctx.lineTo(x, y);
     ctx.stroke();
 
     ctx.restore();
