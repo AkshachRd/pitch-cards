@@ -128,7 +128,7 @@ const useAreaSelection = (objs: Array<CanvasObject>) => {
                 dispatch(deselect(obj.id));
             }
         });
-    }, [selectedIndexes, objs, dispatch, isObjIndexInSelectedIndexes]);
+    }, [selectedIndexes]);
 
     return [mouseDown, mouseUp, mouseOut, mouseMove];
 };

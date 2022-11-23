@@ -2,11 +2,13 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {CanvasObject, Coords, FontFamily, FontStyle, FontWeight, Size} from "shared/types";
 import {isArtObject, isTextObject} from "shared/lib";
 import {RootState} from "app/store";
+import {v4 as uuid4v} from "uuid";
 
 type CanvasObjectsState = Array<CanvasObject>;
 
 type AddPayload = CanvasObject;
 type RemovePayload = string;
+type CopyPayload = string;
 
 interface EditCoordsPayload extends Coords {
     id: string;
@@ -63,6 +65,14 @@ export const canvasObjectsSlice = createSlice({
             if (!obj) throw new Error("remove: object with this id doesn't exist");
 
             state.splice(state.indexOf(obj), 1);
+        },
+        copy: (state, action: PayloadAction<CopyPayload>) => {
+            const obj = state.find((obj) => obj.id === action.payload);
+
+            if (!obj) throw new Error("copy: object with this id doesn't exist");
+
+            state.push({...obj, id: uuid4v(), x: obj.x + 20, y: obj.y + 20, selected: true});
+            obj.selected = false;
         },
         editCoords: (state, action: PayloadAction<EditCoordsPayload>) => {
             const obj = state.find((obj) => obj.id === action.payload.id);
@@ -150,6 +160,7 @@ export const canvasObjectsSlice = createSlice({
 export const {
     add,
     remove,
+    copy,
     editCoords,
     resize,
     changeScale,
