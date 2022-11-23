@@ -26,7 +26,7 @@ export const createRect = (id: string): ArtObject => {
     };
 };
 
-export const createCircle = (id: string): ArtObject => {
+export const createEllipse = (id: string): ArtObject => {
     return {
         id: id,
         type: CanvasObjectTypes.ArtObject,
@@ -37,7 +37,7 @@ export const createCircle = (id: string): ArtObject => {
         selected: false,
         scale: {x: 1, y: 1},
         color: "green",
-        shape: Shapes.Circle
+        shape: Shapes.Ellipse
     };
 };
 

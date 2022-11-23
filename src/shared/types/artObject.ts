@@ -2,9 +2,9 @@ import {CanvasObject} from "./canvasObject";
 
 export enum Shapes
 {
-    Circle= "CIRCLE",
     Rectangle = "RECTANGLE",
-    Triangle = "TRIANGLE"
+    Triangle = "TRIANGLE",
+    Ellipse = "ELLIPSE"
 }
 
 export interface ArtObject extends CanvasObject

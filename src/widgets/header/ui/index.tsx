@@ -5,7 +5,7 @@ import {Filters} from "shared/types";
 import Menu from "features/menu";
 import Icon, {IconNames} from "shared/icons";
 import {v4 as uuid4v} from "uuid";
-import {createCircle, createRect, createTriangle} from "shared/lib/canvas";
+import {createEllipse, createRect, createTriangle} from "shared/lib/canvas";
 import MenuItem from "entities/menuItem";
 import TextEditor from "features/textEditor";
 import "./styles.css";
@@ -26,7 +26,7 @@ const Header = ({children}: HeaderProps) => {
             dropdownButtons: [
                 {iconName: IconNames.Rect, color: "green", action: () => dispatch(add(createRect(uuid4v())))},
                 {iconName: IconNames.Triangle, color: "green", action: () => dispatch(add(createTriangle(uuid4v())))},
-                {iconName: IconNames.Circle, color: "green", action: () => dispatch(add(createCircle(uuid4v())))},
+                {iconName: IconNames.Circle, color: "green", action: () => dispatch(add(createEllipse(uuid4v())))},
             ]},
         {
             iconName: IconNames.Triangle,

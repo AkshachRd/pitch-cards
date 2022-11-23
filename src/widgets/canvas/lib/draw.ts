@@ -24,43 +24,35 @@ const drawCanvasObject = (ctx: CanvasRenderingContext2D, obj: CanvasObject) => {
 
     const scaleX = obj.scale.x;
     const scaleY = obj.scale.y;
-    if (scaleX !== 1 || scaleY !== 1)
-    {
-        if (scaleX < 0 && scaleY < 0)
-        {
-            ctx.translate(obj.x * 2 + obj.width, obj.y * 2 + obj.height);
-        }
-        else if (scaleX < 0)
-        {
+    if (scaleX !== 1 || scaleY !== 1) {
+        if (scaleX < 0) {
             ctx.translate(obj.x * 2 + obj.width, 0);
         }
-        else if (scaleY < 0)
-        {
+        if (scaleY < 0) {
             ctx.translate(0, obj.y * 2 + obj.height);
         }
 
         ctx.scale(scaleX, scaleY);
     }
 
-    switch (obj.type)
-    {
+    switch (obj.type) {
         case CanvasObjectTypes.ArtObject:
-            if (isArtObject(obj))
-            {
-                drawArtObject(ctx, obj);
+            if (!isArtObject(obj)) {
+                throw new Error("Can't draw ArtObject: invalid data");
             }
+            drawArtObject(ctx, obj);
             break;
         case CanvasObjectTypes.Image:
-            if (isImageObject(obj))
-            {
-                drawImageObject(ctx, obj);
+            if (!isImageObject(obj)) {
+                throw new Error("Can't draw Image: invalid data");
             }
+            drawImageObject(ctx, obj);
             break;
         case CanvasObjectTypes.Text:
-            if (isTextObject(obj))
-            {
-                drawTextObject(ctx, obj);
+            if (!isTextObject(obj)) {
+                throw new Error("Can't draw Text: invalid data");
             }
+            drawTextObject(ctx, obj);
             break;
     }
 
@@ -68,22 +60,24 @@ const drawCanvasObject = (ctx: CanvasRenderingContext2D, obj: CanvasObject) => {
 };
 
 const drawArtObject = (ctx: CanvasRenderingContext2D, obj: ArtObject) => {
-    ctx.fillStyle = obj.color;
-    switch (obj.shape)
-    {
-        case Shapes.Circle:
-            ctx.beginPath();
-            ctx.arc(obj.x + obj.width / 2, obj.y + obj.height / 2, obj.width / 2, 0, Math.PI * 2);
-            ctx.fill();
-            break;
+    const {x, y, width, height, color} = obj;
+    ctx.fillStyle = color;
+    switch (obj.shape) {
         case Shapes.Rectangle:
-            ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+            ctx.fillRect(x, y, width, height);
             break;
         case Shapes.Triangle:
             ctx.beginPath();
-            ctx.moveTo(obj.x + obj.width / 2, obj.y);
-            ctx.lineTo(obj.x, obj.y + obj.height);
-            ctx.lineTo(obj.x + obj.width, obj.y + obj.height);
+            ctx.moveTo(x + width / 2, y);
+            ctx.lineTo(x, y + height);
+            ctx.lineTo(x + width, y + height);
+            ctx.fill();
+            break;
+        case Shapes.Ellipse:
+            const radiusX = width / 2;
+            const radiusY = height / 2;
+            ctx.beginPath();
+            ctx.ellipse(x + radiusX, y + radiusY, radiusX, radiusY, 0 , 0, Math.PI * 2);
             ctx.fill();
             break;
     }
