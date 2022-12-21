@@ -9,6 +9,10 @@ type CanvasObjectsState = Array<CanvasObject>;
 type AddPayload = CanvasObject;
 type RemovePayload = string;
 type CopyPayload = string;
+type BringForwardPayload = string;
+type BringToFrontPayload = string;
+type SendBackwardPayload = string;
+type SendToBackPayload = string;
 
 interface EditCoordsPayload extends Coords {
     id: string;
@@ -73,6 +77,40 @@ export const canvasObjectsSlice = createSlice({
 
             state.push({...obj, id: uuid4v(), x: obj.x + 20, y: obj.y + 20, selected: true});
             obj.selected = false;
+        },
+        bringForward: (state, action: PayloadAction<BringForwardPayload>) => {
+            const obj = state.find((obj) => obj.id === action.payload);
+
+            if (!obj) throw new Error("bringForward: object with this id doesn't exist");
+
+            const index = state.indexOf(obj);
+            state.splice(index, 1);
+            state.splice(index + 1, 0, obj);
+        },
+        bringToFront: (state, action: PayloadAction<BringToFrontPayload>) => {
+            const obj = state.find((obj) => obj.id === action.payload);
+
+            if (!obj) throw new Error("bringToFront: object with this id doesn't exist");
+
+            state.splice(state.indexOf(obj), 1);
+            state.push(obj);
+        },
+        sendBackward: (state, action: PayloadAction<SendBackwardPayload>) => {
+            const obj = state.find((obj) => obj.id === action.payload);
+
+            if (!obj) throw new Error("sendBackward: object with this id doesn't exist");
+
+            const index = state.indexOf(obj);
+            state.splice(index, 1);
+            state.splice(index === 0 ? 0 : index - 1, 0, obj);
+        },
+        sendToBack: (state, action: PayloadAction<SendToBackPayload>) => {
+            const obj = state.find((obj) => obj.id === action.payload);
+
+            if (!obj) throw new Error("sendToBack: object with this id doesn't exist");
+
+            state.splice(state.indexOf(obj), 1);
+            state.unshift(obj);
         },
         editCoords: (state, action: PayloadAction<EditCoordsPayload>) => {
             const obj = state.find((obj) => obj.id === action.payload.id);
@@ -161,6 +199,10 @@ export const {
     add,
     remove,
     copy,
+    bringForward,
+    bringToFront,
+    sendBackward,
+    sendToBack,
     editCoords,
     resize,
     changeScale,

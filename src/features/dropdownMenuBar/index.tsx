@@ -5,12 +5,25 @@ import "./styles.css";
 import {useAppDispatch, useAppSelector, useModal} from "shared/hooks";
 import {selectCanvasState} from "widgets/canvas/model/canvasSlice";
 import ImageUploader from "../imageUploader/ui";
-import {copy, remove, selectCanvasObjectsState} from "widgets/canvas/model/canvasObjectsSlice";
+import {
+    bringForward,
+    bringToFront,
+    copy,
+    remove,
+    selectCanvasObjectsState, sendBackward, sendToBack
+} from "widgets/canvas/model/canvasObjectsSlice";
 import {memo} from "react";
+import {CanvasObject} from "shared/types";
+
+interface SubMenuProps {
+    selectedObjs: Array<CanvasObject>;
+}
 
 const DropdownMenuBar = () => {
     const dispatch = useAppDispatch();
     const {title} = useAppSelector(selectCanvasState);
+    const objs = useAppSelector(selectCanvasObjectsState);
+    const selectedObjs = objs.filter((obj) => obj.selected);
     const {setModal, unsetModal} = useModal();
 
     const FileMenu = memo(() => {
@@ -26,26 +39,63 @@ const DropdownMenuBar = () => {
         );
     });
 
-    const EditMenu = memo(() => {
-        const objs = useAppSelector(selectCanvasObjectsState);
-        const selectedObjs = objs.filter((obj) => obj.selected);
-
+    const EditMenu = memo(({selectedObjs}: SubMenuProps) => {
+        const disabled = !selectedObjs;
         return (
             <DropdownMenu title="Edit">
-                <DropdownMenuItem onClick={() => selectedObjs.forEach((obj) => dispatch(copy(obj.id)))}>
+                <DropdownMenuItem
+                    disabled={disabled}
+                    onClick={() => selectedObjs.forEach((obj) => dispatch(copy(obj.id)))}
+                >
                     Duplicate
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => selectedObjs.forEach((obj) => dispatch(remove(obj.id)))}>
+                <DropdownMenuItem
+                    disabled={disabled}
+                    onClick={() => selectedObjs.forEach((obj) => dispatch(remove(obj.id)))}
+                >
                     Delete
                 </DropdownMenuItem>
             </DropdownMenu>
         );
     });
 
+    const ObjectMenu = memo(({selectedObjs}: SubMenuProps) => {
+        let disabled = !selectedObjs;
+        return (
+            <DropdownMenu title="Object">
+                <DropdownMenuItem
+                    disabled={disabled}
+                    onClick={() => selectedObjs.forEach((obj) => dispatch(bringToFront(obj.id)))}
+                >
+                    Bring to Front
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    disabled={disabled}
+                    onClick={() => selectedObjs.forEach((obj) => dispatch(bringForward(obj.id)))}
+                >
+                    Bring Forward
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    disabled={disabled}
+                    onClick={() => selectedObjs.forEach((obj) => dispatch(sendBackward(obj.id)))}
+                >
+                    Send Backward
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    disabled={disabled}
+                    onClick={() => selectedObjs.forEach((obj) => dispatch(sendToBack(obj.id)))}
+                >
+                    Send to Back
+                </DropdownMenuItem>
+            </DropdownMenu>
+        )
+    });
+
     return (
         <div className="dropdown-menu-bar">
             <FileMenu/>
-            <EditMenu/>
+            <EditMenu selectedObjs={selectedObjs}/>
+            <ObjectMenu selectedObjs={selectedObjs}/>
         </div>
     )
 };
