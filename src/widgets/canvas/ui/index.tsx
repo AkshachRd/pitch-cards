@@ -1,5 +1,5 @@
 import {useEffect, useRef, MouseEvent, useCallback} from "react";
-import {applyFilter, clearCanvas, drawBackground, drawCanvasObjects, drawSelectionLines} from "../lib";
+import {applyFilter, clearCanvas, drawBackground, drawCanvasObjects, drawSelectionLines, drawSkeletons} from "../lib";
 import {useAppSelector} from "shared/hooks";
 import {selectCanvasState} from "../model/canvasSlice";
 import useDragNDrop from "../lib/useDragAndDrop";
@@ -14,9 +14,16 @@ export const Canvas = () => {
     const canvasObjects = useAppSelector(selectCanvasObjectsState);
     const selection = useAppSelector(selectSelection);
     const {width: canvasWidth, height: canvasHeight, filter} = useAppSelector(selectCanvasState);
-    const [mouseDownDragNDrop, mouseUpDragNDrop, mouseOutDragNDrop, mouseMoveDragNDrop] = useDragNDrop(canvasObjects);
+    const [
+        skeletonsDragNDrop,
+        mouseDownDragNDrop,
+        mouseUpDragNDrop,
+        mouseOutDragNDrop,
+        mouseMoveDragNDrop
+    ] = useDragNDrop(canvasObjects);
     const [mouseDownResize, mouseUpResize, mouseOutResize, mouseMoveResize] = useResize(canvasObjects);
-    const [mouseDownAreaSelection, 
+    const [
+        mouseDownAreaSelection,
         mouseUpAreaSelection, 
         mouseOutAreaSelection,
         mouseMoveAreaSelection
@@ -55,9 +62,10 @@ export const Canvas = () => {
         clearCanvas(context);
         drawBackground(context, "white");
         drawCanvasObjects(context, canvasObjects);
+        drawSkeletons(context, skeletonsDragNDrop);
         drawSelectionLines(context, selection);
         applyFilter(context, filter, 0.7);
-    }, [canvasObjects, selection, filter]);
+    }, [canvasObjects, selection, filter, skeletonsDragNDrop]);
 
     return (
         <div className="canvas-wrapper">

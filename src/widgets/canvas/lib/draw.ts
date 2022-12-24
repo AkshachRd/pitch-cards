@@ -4,17 +4,24 @@ import {getCanvasFont} from "shared/lib";
 
 const pattern = [10, 10];
 
+const isMultipleObjsSelected = (objs: Array<CanvasObject>) => {
+    return objs.filter((obj) => obj.selected).length > 1;
+};
+
 export const drawCanvasObjects = (ctx: CanvasRenderingContext2D,
                                   objs: Array<CanvasObject>) => {
-    const CORNER_SIDE_LENGTH = Number(process.env.REACT_APP_OBJECT_CORNER_SIDE_LENGTH);
-    const cornerColor = "#000";
+    const CORNER_SIDE_LENGTH = Number(process.env.REACT_APP_OBJECT_CORNER_SIDE_LENGTH ?? "10");
+    const CORNER_COLOR = process.env.REACT_APP_OBJECT_CORNER_COLOR ?? "#000";
+
+    const isMultipleSelectedObjs = isMultipleObjsSelected(objs);
+
     objs.forEach((obj) => {
         const rect = (({x, y, width, height}) => ({x, y, width, height}))(obj);
         drawCanvasObject(ctx, obj);
         if (obj.selected)
         {
             drawSelectionLines(ctx, rect);
-            drawDragCorners(ctx, rect, CORNER_SIDE_LENGTH, cornerColor);
+            !isMultipleSelectedObjs && drawDragCorners(ctx, rect, CORNER_SIDE_LENGTH, CORNER_COLOR);
         }
     })
 };
@@ -141,4 +148,16 @@ export const drawBackground = (ctx: CanvasRenderingContext2D, background: string
 
 export const clearCanvas = (ctx: CanvasRenderingContext2D): void => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+};
+
+export const drawSkeletons = (ctx: CanvasRenderingContext2D, skeletons: Array<Rect>): void => {
+    ctx.save();
+
+    ctx.fillStyle = "#black";
+    skeletons.forEach((skeleton) => {
+        const {x, y, width, height} = skeleton;
+        ctx.strokeRect(x, y, width, height);
+    });
+
+    ctx.restore();
 };
