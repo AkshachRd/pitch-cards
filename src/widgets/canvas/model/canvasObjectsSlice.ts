@@ -151,6 +151,11 @@ export const canvasObjectsSlice = createSlice({
 
             obj.selected = false;
         },
+        deselectAll: (state) => {
+            state.forEach((obj) => {
+                obj.selected = false;
+            });
+        },
         changeColor: (state, action: PayloadAction<ChangeColorPayload>) => {
             const obj = state.find((obj) => obj.id === action.payload.id);
 
@@ -208,6 +213,7 @@ export const {
     changeScale,
     select,
     deselect,
+    deselectAll,
     changeColor,
     changeFontFamily,
     changeFontSize,

@@ -1,6 +1,5 @@
 import DropdownMenu from "entities/dropdownMenu";
 import DropdownMenuItem from "entities/dropdownMenuItem";
-import {downloadImage, exportAsPng} from "shared/lib";
 import "./styles.css";
 import {useAppDispatch, useAppSelector, useModal} from "shared/hooks";
 import {selectCanvasState} from "widgets/canvas/model/canvasSlice";
@@ -14,6 +13,7 @@ import {
 } from "widgets/canvas/model/canvasObjectsSlice";
 import {memo} from "react";
 import {CanvasObject} from "shared/types";
+import {useExportCanvas} from "./lib";
 
 interface SubMenuProps {
     selectedObjs: Array<CanvasObject>;
@@ -23,6 +23,7 @@ const DropdownMenuBar = () => {
     const dispatch = useAppDispatch();
     const {title} = useAppSelector(selectCanvasState);
     const objs = useAppSelector(selectCanvasObjectsState);
+    const exportCanvas = useExportCanvas(title);
     const selectedObjs = objs.filter((obj) => obj.selected);
     const {setModal, unsetModal} = useModal();
 
@@ -32,7 +33,9 @@ const DropdownMenuBar = () => {
                 <DropdownMenuItem onClick={() => setModal(<ImageUploader toggle={unsetModal}/>)}>
                     Open image
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => downloadImage(exportAsPng(), title)}>
+                <DropdownMenuItem onClick={() => {
+                    exportCanvas();
+                }}>
                     Export as PNG
                 </DropdownMenuItem>
             </DropdownMenu>

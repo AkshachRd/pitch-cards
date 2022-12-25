@@ -3,6 +3,7 @@ import {CanvasObject, Coords, Rect} from "shared/types";
 import {useAppDispatch} from "shared/hooks";
 import {editCoords} from "../model/canvasObjectsSlice";
 import {isMouseInRect, isMouseInRectCorner} from "shared/lib/canvas";
+import {findLast} from "shared/lib";
 
 const useDragNDrop = (objs: Array<CanvasObject>): [
     Array<Rect>,
@@ -12,7 +13,7 @@ const useDragNDrop = (objs: Array<CanvasObject>): [
     (e: MouseEvent<HTMLCanvasElement>) => void] => {
     const [dragging, toggleDragging] = useReducer((state) => !state, false);
     const [coords, setCoords] = useState<Coords>({x: 0, y: 0});
-    const [skeletons, setSkeletons] = useState<Array<Rect>>([]);
+    const [skeletons, setSkeletons] = useState<Array<CanvasObject>>([]);
     const selectedObjs = objs.filter((obj) => obj.selected);
     const dispatch = useAppDispatch();
 
@@ -29,12 +30,11 @@ const useDragNDrop = (objs: Array<CanvasObject>): [
         const clickX = e.clientX - canvasRect.left;
         const clickY = e.clientY - canvasRect.top;
 
-        const draggingObj = objs.find((obj) => {
-            const objRect = (({x, y, width, height}) => ({x, y, width, height}))(obj);
-            return isMouseInRect(clickX, clickY, objRect) && !isMouseInRectCorner(clickX, clickY, objRect);
+        const draggingObj = findLast(objs, (obj) => {
+            return isMouseInRect(clickX, clickY, obj);
         });
 
-        if (draggingObj)
+        if (draggingObj && selectedObjs.every((obj) => !isMouseInRectCorner(clickX, clickY, obj)))
         {
             toggleDragging();
             setSkeletons(isObjInSelectedObjs(draggingObj) ? selectedObjs : [draggingObj]);
@@ -47,8 +47,7 @@ const useDragNDrop = (objs: Array<CanvasObject>): [
         e.preventDefault();
         e.currentTarget.style.cursor = 'auto';
 
-        selectedObjs.forEach(({id}, index) => {
-            const {x, y} = skeletons[index];
+        skeletons.forEach(({id, x, y}) => {
             dispatch(editCoords({id, x, y}));
         });
         setSkeletons([]);
@@ -66,8 +65,8 @@ const useDragNDrop = (objs: Array<CanvasObject>): [
         const dx = mouseX - coords.x;
         const dy = mouseY - coords.y;
 
-        setSkeletons((state) => state.map(({x, y, width, height}) => {
-            return {x: x + dx, y: y + dy, width, height};
+        setSkeletons((state) => state.map((skeleton) => {
+            return {...skeleton, x: skeleton.x + dx, y: skeleton.y + dy};
         }));
         setCoords({x: mouseX, y: mouseY});
     };
