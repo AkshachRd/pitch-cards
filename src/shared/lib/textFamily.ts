@@ -1,3 +1,5 @@
+import {FontFamily} from "../types";
+
 const trimFontFamilyName = (fontFamilyName: string) => {
     if (fontFamilyName[0] === "'" && fontFamilyName.slice(-1) === "'")
     {
@@ -7,6 +9,6 @@ const trimFontFamilyName = (fontFamilyName: string) => {
     return fontFamilyName;
 };
 
-export const getFontFamilyName = (fontFamily: string) => {
+export const getFontFamilyName = (fontFamily: FontFamily) => {
     return trimFontFamilyName(fontFamily.substring(0, fontFamily.indexOf(",")));
 };

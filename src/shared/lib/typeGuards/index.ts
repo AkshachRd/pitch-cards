@@ -7,7 +7,7 @@ import {
     FontWeight,
     ImageObject,
     TextObject
-} from "../../types";
+} from "shared/types";
 
 export const isArtObject = (obj: CanvasObject | ArtObject): obj is ArtObject => {
     return (obj as ArtObject).type === CanvasObjectTypes.ArtObject &&
