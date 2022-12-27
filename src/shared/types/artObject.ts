@@ -1,11 +1,12 @@
 import {CanvasObject} from "./canvasObject";
 
-export enum Shapes
-{
-    Rectangle = "RECTANGLE",
-    Triangle = "TRIANGLE",
-    Ellipse = "ELLIPSE"
-}
+export const Shapes = {
+    Rectangle: "Rectangle",
+    Triangle: "Triangle",
+    Ellipse: "Ellipse"
+} as const;
+
+export type Shapes = typeof Shapes[keyof typeof Shapes];
 
 export interface ArtObject extends CanvasObject
 {

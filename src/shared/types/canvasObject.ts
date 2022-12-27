@@ -1,11 +1,12 @@
 import { Rect } from "./rect";
 
-export enum CanvasObjectTypes
-{
-    Text = "TEXT",
-    Image = "IMAGE",
-    ArtObject = "ARTOBJECT",
-}
+export const CanvasObjectTypes = {
+    Text: "TEXT",
+    Image: "IMAGE",
+    ArtObject: "ARTOBJECT",
+} as const;
+
+export type CanvasObjectTypes = typeof CanvasObjectTypes[keyof typeof CanvasObjectTypes];
 
 export interface CanvasObject extends Rect
 {

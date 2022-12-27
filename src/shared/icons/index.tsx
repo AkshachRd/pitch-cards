@@ -3,13 +3,14 @@ import Triangle from "./triangle";
 import Circle from "./circle";
 import Cross from "./cross";
 
-export enum IconNames
-{
-    Rect = "RECTANGLE",
-    Triangle = "TRIANGLE",
-    Circle = "CIRCLE",
-    Cross = "CROSS",
-}
+export const IconNames = {
+    Rect: "Rectangle",
+    Triangle: "Triangle",
+    Circle: "Circle",
+    Cross: "Cross",
+} as const;
+
+export type IconNames = typeof IconNames[keyof typeof IconNames];
 
 interface IconProps
 {

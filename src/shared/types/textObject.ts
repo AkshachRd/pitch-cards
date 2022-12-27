@@ -1,27 +1,33 @@
 import {CanvasObject} from "./canvasObject";
 
-export enum FontFamily {
-    Arial = "Arial, Helvetica, sans-serif",
-    Verdana = "Verdana, sans-serif",
-    Tahoma = "Tahoma, Verdana, sans-serif",
-    TrebuchetMS = "'Trebuchet MS', Helvetica, sans-serif",
-    TimesNewRoman = "'Times New Roman', Times, serif",
-    Georgia = "Georgia, serif",
-    Garamond = "Garamond, serif",
-    CourierNew = "'Courier New', Courier, monospace",
-    BrushScriptMT = "'Brush Script MT', cursive"
-}
+export const FontFamily = {
+    Arial: "Arial, Helvetica, sans-serif",
+    Verdana: "Verdana, sans-serif",
+    Tahoma: "Tahoma, Verdana, sans-serif",
+    TrebuchetMS: "'Trebuchet MS', Helvetica, sans-serif",
+    TimesNewRoman: "'Times New Roman', Times, serif",
+    Georgia: "Georgia, serif",
+    Garamond: "Garamond, serif",
+    CourierNew: "'Courier New', Courier, monospace",
+    BrushScriptMT: "'Brush Script MT', cursive"
+} as const;
 
-export enum FontStyle {
-    Normal = "",
-    Italic = "italic",
-    Oblique = "oblique"
-}
+export type FontFamily = typeof FontFamily[keyof typeof FontFamily];
 
-export enum FontWeight {
-    Normal = 400,
-    Bold = 700
-}
+export const FontStyle = {
+    Normal: "",
+    Italic: "italic",
+    Oblique: "oblique"
+} as const;
+
+export type FontStyle = typeof FontStyle[keyof typeof FontStyle];
+
+export const FontWeight = {
+    Normal: 400,
+    Bold: 700
+} as const;
+
+export type FontWeight = typeof FontWeight[keyof typeof FontWeight];
 
 export interface TextObject extends CanvasObject
 {
