@@ -11,7 +11,9 @@ interface DropdownMenuItemProps {
 
 const DropdownMenuItem = ({leftIcon, rightIcon, children, onClick, disabled}: DropdownMenuItemProps) => {
     return (
-        <li className="dropdown-menu__item" onClick={() => onClick && !disabled && onClick()}>
+        <li className={`dropdown-menu__item ${disabled ? "dropdown-menu__item_disabled" : " "}`}
+            onClick={() => onClick && !disabled && onClick()}
+        >
             <span>{leftIcon}</span>
             {children}
             <span>{rightIcon}</span>
