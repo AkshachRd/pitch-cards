@@ -14,6 +14,7 @@ import {
 import {memo} from "react";
 import {CanvasObject} from "shared/types";
 import {useExportCanvas} from "./lib";
+import {redo, selectHistory, undo} from "shared/history";
 
 interface SubMenuProps {
     selectedObjs: Array<CanvasObject>;
@@ -43,27 +44,42 @@ const DropdownMenuBar = () => {
     });
 
     const EditMenu = memo(({selectedObjs}: SubMenuProps) => {
-        const disabled = !selectedObjs;
+        const disabledDupDel = !selectedObjs.length;
+        const {past, future} = useAppSelector(selectHistory);
+        const disabledUndo = !past.length;
+        const disabledRedo = !future.length;
         return (
             <DropdownMenu title="Edit">
                 <DropdownMenuItem
-                    disabled={disabled}
+                    disabled={disabledDupDel}
                     onClick={() => selectedObjs.forEach((obj) => dispatch(copy(obj.id)))}
                 >
                     Duplicate
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                    disabled={disabled}
+                    disabled={disabledDupDel}
                     onClick={() => selectedObjs.forEach((obj) => dispatch(remove(obj.id)))}
                 >
                     Delete
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    disabled={disabledUndo}
+                    onClick={() => dispatch(undo())}
+                >
+                    Undo
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    disabled={disabledRedo}
+                    onClick={() => dispatch(redo())}
+                >
+                    Redo
                 </DropdownMenuItem>
             </DropdownMenu>
         );
     });
 
     const ObjectMenu = memo(({selectedObjs}: SubMenuProps) => {
-        let disabled = !selectedObjs;
+        let disabled = !selectedObjs.length;
         return (
             <DropdownMenu title="Object">
                 <DropdownMenuItem

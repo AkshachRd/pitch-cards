@@ -220,5 +220,5 @@ export const {
     changeFontStyle,
     changeFontWeight
 } = canvasObjectsSlice.actions;
-export const selectCanvasObjectsState = (state: RootState) => state.canvasObjects;
+export const selectCanvasObjectsState = (state: RootState) => state.history.present.canvasObjects;
 export default canvasObjectsSlice.reducer;

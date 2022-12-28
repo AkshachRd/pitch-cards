@@ -42,6 +42,7 @@ export const {
     resize,
     changeTitle,
 } = canvasSlice.actions;
-export const selectCanvasState = (state: RootState) => state.canvas;
-export const selectCanvasSize = (state: RootState) => (({width, height}) => ({width, height}))(state.canvas);
+export const selectCanvasState = (state: RootState) => state.history.present.canvas;
+export const selectCanvasSize = (state: RootState) => (({width, height}) =>
+    ({width, height}))(state.history.present.canvas);
 export default canvasSlice.reducer;
