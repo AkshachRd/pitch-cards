@@ -1,10 +1,10 @@
 import {FontFamily, TextObject} from "shared/types";
 import {getFontFamilyName, isFontFamily} from "shared/lib";
 import DragNumInput from "entities/dragNumInput";
-import ColorPicker from "../../../entities/colorPicker";
+import ColorPicker from "entities/colorPicker";
 import {ChangeEvent, useEffect, useState} from "react";
 import {
-    changeColor,
+    changeColor, changeContent,
     changeFontFamily,
     changeFontSize,
     changeFontStyle,
@@ -21,6 +21,7 @@ interface TextObjectPropertiesEditorProps
 const TextObjectPropertiesEditor = ({textObj}: TextObjectPropertiesEditorProps) => {
     const dispatch = useAppDispatch();
 
+    const [content, setContent] = useState(textObj.content);
     const [fontFamily, setFontFamily] = useState(textObj.fontFamily);
     const [fontSize, setFontSize] = useState(textObj.fontSize);
     const [fontStyle, setFontStyle] = useState(textObj.fontStyle);
@@ -49,6 +50,10 @@ const TextObjectPropertiesEditor = ({textObj}: TextObjectPropertiesEditorProps) 
         dispatch(changeFontSize({id, fontSize}));
     }, [fontSize]);
 
+    useEffect(() => {
+        dispatch(changeContent({id, content}))
+    }, [content]);
+
     const handleFontFamilyChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const fontFamily = e.target.value;
         if (!isFontFamily(fontFamily)) throw new Error("Unknown font family");
@@ -57,6 +62,7 @@ const TextObjectPropertiesEditor = ({textObj}: TextObjectPropertiesEditorProps) 
 
     return (
         <>
+            <input type="text" name="Content" value={content} onChange={(e) => setContent(e.target.value)}/>
             <select name="fontFamily" value={fontFamily} onChange={handleFontFamilyChange}>
                 {Object.values(FontFamily).map((fontFamily) => {
                     const fontFamilyName = getFontFamilyName(fontFamily);

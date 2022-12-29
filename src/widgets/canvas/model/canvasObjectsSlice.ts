@@ -54,6 +54,11 @@ interface ChangeFontWeightPayload {
     fontWeight: FontWeight;
 }
 
+interface ChangeContentPayload {
+    id: string;
+    content: string;
+}
+
 const initialState: CanvasObjectsState = [];
 
 export const canvasObjectsSlice = createSlice({
@@ -197,6 +202,14 @@ export const canvasObjectsSlice = createSlice({
 
             obj.fontWeight = action.payload.fontWeight;
         },
+        changeContent: (state, action: PayloadAction<ChangeContentPayload>) => {
+            const obj = state.find((obj) => obj.id === action.payload.id);
+
+            if (!obj) throw new Error("changeContent: object with this id doesn't exist");
+            if (!isTextObject(obj)) throw new Error("changeContent: only text objects have content property");
+
+            obj.content = action.payload.content;
+        },
     }
 });
 
@@ -218,7 +231,8 @@ export const {
     changeFontFamily,
     changeFontSize,
     changeFontStyle,
-    changeFontWeight
+    changeFontWeight,
+    changeContent
 } = canvasObjectsSlice.actions;
 export const selectCanvasObjectsState = (state: RootState) => state.history.present.canvasObjects;
 export default canvasObjectsSlice.reducer;
