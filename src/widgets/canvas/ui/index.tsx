@@ -1,6 +1,13 @@
 import {useEffect, useRef, MouseEvent, useCallback} from "react";
-import {applyFilter, clearCanvas, drawBackground, drawCanvasObjects, drawSelectionLines, drawSkeletons} from "../lib";
-import {useAppSelector} from "shared/hooks";
+import {
+    applyFilter,
+    clearCanvas,
+    drawBackground,
+    drawCanvasObjects,
+    drawSelectionLines,
+    replaceElementsById
+} from "../lib";
+import {useAppDispatch, useAppSelector} from "shared/hooks";
 import {selectCanvasState} from "../model/canvasSlice";
 import useDragNDrop from "../lib/useDragAndDrop";
 import "./styles.css";
@@ -8,12 +15,15 @@ import useResize from "../lib/useResize";
 import useAreaSelection from "../lib/useAreaSelection";
 import {selectCanvasObjectsState} from "../model/canvasObjectsSlice";
 import {selectSelection} from "../model/selectionSlice";
+import {redo, selectHistory, undo} from "shared/history";
 
 export const Canvas = () => {
+    const dispatch = useAppDispatch();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const canvasObjects = useAppSelector(selectCanvasObjectsState);
     const selection = useAppSelector(selectSelection);
     const {width: canvasWidth, height: canvasHeight, filter} = useAppSelector(selectCanvasState);
+    const {past, future} = useAppSelector(selectHistory);
     const [
         skeletonsDragNDrop,
         mouseDownDragNDrop,
@@ -53,6 +63,25 @@ export const Canvas = () => {
         mouseMoveResize(e);
     }, [mouseMoveAreaSelection, mouseMoveDragNDrop, mouseMoveResize]);
 
+    // TODO: Выделить в хук нажатие клавиш
+    const disabledUndo = !past.length;
+    const disabledRedo = !future.length;
+    const handleKeyPress = useCallback((e: KeyboardEvent) => {
+        if (e.key.toLowerCase() === "z" && e.ctrlKey && !disabledUndo) {
+            dispatch(undo());
+        }
+        else if (e.key.toLowerCase() === "y" && e.ctrlKey && !disabledRedo) {
+            dispatch(redo());
+        }
+    }, [disabledRedo, disabledUndo, dispatch]);
+
+    useEffect(() => {
+        document.addEventListener("keydown", handleKeyPress);
+        return () => {
+            document.removeEventListener("keydown", handleKeyPress);
+        }
+    });
+
     useEffect(() => {
         const context = canvasRef.current?.getContext("2d");
         if (!context) {
@@ -61,8 +90,8 @@ export const Canvas = () => {
 
         clearCanvas(context);
         drawBackground(context, "white");
-        drawCanvasObjects(context, canvasObjects);
-        drawSkeletons(context, skeletonsDragNDrop);
+        drawCanvasObjects(context, replaceElementsById(canvasObjects, skeletonsDragNDrop));
+        //drawSkeletons(context, skeletonsDragNDrop);
         drawSelectionLines(context, selection);
         applyFilter(context, filter, 0.7);
     }, [canvasObjects, selection, filter, skeletonsDragNDrop]);

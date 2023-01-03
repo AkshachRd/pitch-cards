@@ -48,6 +48,7 @@ const DropdownMenuBar = () => {
         const {past, future} = useAppSelector(selectHistory);
         const disabledUndo = !past.length;
         const disabledRedo = !future.length;
+
         return (
             <DropdownMenu title="Edit">
                 <DropdownMenuItem

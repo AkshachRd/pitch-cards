@@ -1,12 +1,12 @@
 import {MouseEvent, useCallback, useReducer, useState} from "react";
-import {CanvasObject, Coords, Rect} from "shared/types";
+import {CanvasObject, Coords} from "shared/types";
 import {useAppDispatch} from "shared/hooks";
 import {editCoords} from "../model/canvasObjectsSlice";
 import {isMouseInRect, isMouseInRectCorner} from "shared/lib/canvas";
 import {findLast} from "shared/lib";
 
 const useDragNDrop = (objs: Array<CanvasObject>): [
-    Array<Rect>,
+    Array<CanvasObject>,
     (e: MouseEvent<HTMLCanvasElement>) => void,
     (e: MouseEvent<HTMLCanvasElement>) => void,
     (e: MouseEvent<HTMLCanvasElement>) => void,
@@ -66,7 +66,7 @@ const useDragNDrop = (objs: Array<CanvasObject>): [
         const dy = mouseY - coords.y;
 
         setSkeletons((state) => state.map((skeleton) => {
-            return {...skeleton, x: skeleton.x + dx, y: skeleton.y + dy};
+            return {...skeleton, x: skeleton.x + dx, y: skeleton.y + dy, selected: true};
         }));
         setCoords({x: mouseX, y: mouseY});
     };
