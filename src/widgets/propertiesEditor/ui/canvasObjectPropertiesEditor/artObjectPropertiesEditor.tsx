@@ -1,8 +1,8 @@
-import ColorPicker from "entities/colorPicker";
 import {useEffect, useState} from "react";
 import {ArtObject} from "shared/types";
 import {changeColor} from "widgets/canvas/model/canvasObjectsSlice";
 import {useAppDispatch} from "shared/hooks";
+import ColorInput from "entities/PropertiesInputs/ui/colorInput";
 
 interface ArtObjectPropertiesEditorProps
 {
@@ -21,7 +21,9 @@ const ArtObjectPropertiesEditor = ({artObj}: ArtObjectPropertiesEditorProps) => 
     }, [color]);
 
     return (
-        <ColorPicker name="artObjectColor" onChange={(color) => setColor(color)}/>
+        <>
+            <ColorInput name="Color" value={color} onChange={(e) => setColor(e.target.value)}/>
+        </>
     );
 };
 

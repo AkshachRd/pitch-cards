@@ -1,3 +1,5 @@
+@import "./styles/index.scss";
+
 .App {
     text-align: center;
 }
@@ -24,6 +26,12 @@
 
 .App-link {
     color: rgb(112, 76, 182);
+}
+
+.App__container
+{
+    display: flex;
+    flex-direction: row;
 }
 
 @keyframes App-logo-float {

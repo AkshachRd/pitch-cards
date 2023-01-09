@@ -1,8 +1,7 @@
-import {FontFamily, TextObject} from "shared/types";
+import {FontFamily, FontWeight, FontStyle, TextObject} from "shared/types";
 import {getFontFamilyName, isFontFamily} from "shared/lib";
-import DragNumInput from "entities/dragNumInput";
-import ColorPicker from "entities/colorPicker";
-import {ChangeEvent, useEffect, useState} from "react";
+import DragNumInput from "features/dragNumInput";
+import {ChangeEvent, useEffect, useReducer, useState} from "react";
 import {
     changeColor, changeContent,
     changeFontFamily,
@@ -11,7 +10,10 @@ import {
     changeFontWeight
 } from "widgets/canvas/model/canvasObjectsSlice";
 import {useAppDispatch} from "shared/hooks";
-import FontStyleInput from "entities/fontStyleInput";
+import TextInput from "entities/PropertiesInputs/ui/textInput";
+import ColorInput from "entities/PropertiesInputs/ui/colorInput";
+import Select from "entities/PropertiesInputs/ui/select";
+import FontStyleInput from "entities/PropertiesInputs/ui/fontStyleInput";
 
 interface TextObjectPropertiesEditorProps
 {
@@ -24,8 +26,18 @@ const TextObjectPropertiesEditor = ({textObj}: TextObjectPropertiesEditorProps) 
     const [content, setContent] = useState(textObj.content);
     const [fontFamily, setFontFamily] = useState(textObj.fontFamily);
     const [fontSize, setFontSize] = useState(textObj.fontSize);
-    const [fontStyle, setFontStyle] = useState(textObj.fontStyle);
-    const [fontWeight, setFontWeight] = useState(textObj.fontWeight);
+    const [fontStyle, toggleFontStyle] = useReducer<(fontStyle: FontStyle) => FontStyle>((fontStyle: FontStyle) => {
+        if (fontStyle === FontStyle.Normal) {
+            return FontStyle.Italic;
+        }
+        return FontStyle.Normal;
+    }, textObj.fontStyle);
+    const [fontWeight, toggleFontWeight] = useReducer((fontWeight) => {
+        if (fontWeight === FontWeight.Normal) {
+            return FontWeight.Bold;
+        }
+        return FontWeight.Normal;
+    }, textObj.fontWeight);
     const [color, setColor] = useState(textObj.color);
 
     const id = textObj.id;
@@ -62,8 +74,8 @@ const TextObjectPropertiesEditor = ({textObj}: TextObjectPropertiesEditorProps) 
 
     return (
         <>
-            <input type="text" name="Content" value={content} onChange={(e) => setContent(e.target.value)}/>
-            <select name="fontFamily" value={fontFamily} onChange={handleFontFamilyChange}>
+            <TextInput name="Content" value={content} onChange={(e) => setContent(e.target.value)}/>
+            <Select name="Font" value={fontFamily} onChange={handleFontFamilyChange}>
                 {Object.values(FontFamily).map((fontFamily) => {
                     const fontFamilyName = getFontFamilyName(fontFamily);
                     return (
@@ -75,18 +87,21 @@ const TextObjectPropertiesEditor = ({textObj}: TextObjectPropertiesEditorProps) 
                         </option>
                     );
                 })}
-            </select>
+            </Select>
             <DragNumInput
-                name="fontSize"
+                name="Size"
                 minValue={6}
                 defaultValue={fontSize}
                 onChange={(fontSize) => setFontSize(fontSize)}
             />
             <FontStyleInput
-                onStyleChange={(fontStyle) => setFontStyle(fontStyle)}
-                onWeightChange={(fontWeight) => setFontWeight(fontWeight)}
+                name="Style"
+                onStyleToggle={toggleFontStyle}
+                isItalic={fontStyle === FontStyle.Italic}
+                onWeightToggle={toggleFontWeight}
+                isBald={fontWeight === FontWeight.Bold}
             />
-            <ColorPicker name="textColor" onChange={(color) => setColor(color)}/>
+            <ColorInput name="Color" onChange={(e) => setColor(e.target.value)}/>
         </>
     );
 };

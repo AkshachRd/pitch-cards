@@ -1,0 +1,24 @@
+.properties-editor
+{
+    width: var(--properties-editor-width);
+    background-color: var(--bg);
+}
+
+.properties-editor__inputs
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: var(--properties-editor-gap);
+}
+
+.properties-editor__title
+{
+    color: var(--text-color);
+}
+
+.properties-editor__drag-input
+{
+    width: 50%;
+}

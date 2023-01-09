@@ -1,5 +1,6 @@
 import {ChangeEvent, MouseEvent, useEffect, useReducer, useState} from "react";
-import "./styles.css";
+import TextInput from "entities/PropertiesInputs/ui/textInput";
+import "./styles.scss";
 
 interface DragNumInputProps
 {
@@ -14,17 +15,20 @@ const DragNumInput = ({minValue, value, name, defaultValue, onChange}: DragNumIn
     const [startPos, setStartPos] = useState(0);
     const [val, setVal] = useState(defaultValue || minValue || 0);
     const [dragging, toggleDragging] = useReducer((state) => !state, false);
+    const [disableTyping, setDisableTyping] = useState(false);
 
-    const mouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    const mouseDown = (e: MouseEvent<HTMLInputElement>) => {
+        setDisableTyping(false);
         e.currentTarget.style.cursor = "grabbing";
+        e.currentTarget.readOnly = true;
         setStartPos(e.clientY);
         toggleDragging();
     };
 
-    const mouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    const mouseMove = (e: MouseEvent<HTMLInputElement>) => {
         if (!dragging) return;
-        e.preventDefault();
 
+        e.preventDefault();
         const currPos = e.clientY;
         const delta: number = Math.ceil(startPos - currPos);
         const newValue: number = +val + +delta;
@@ -39,13 +43,17 @@ const DragNumInput = ({minValue, value, name, defaultValue, onChange}: DragNumIn
             onChange && onChange(newValue);
         }
         setStartPos(currPos);
+        setDisableTyping(true);
     };
 
-    const mouseUp = (e: MouseEvent<HTMLDivElement>) => {
+    const mouseUp = (e: MouseEvent<HTMLInputElement>) => {
         if (!dragging) return;
+
         e.preventDefault();
         toggleDragging();
         e.currentTarget.style.cursor = "grab";
+        e.currentTarget.readOnly = disableTyping;
+        !disableTyping && e.currentTarget.select();
     };
 
     const mouseOut = mouseUp;
@@ -65,17 +73,19 @@ const DragNumInput = ({minValue, value, name, defaultValue, onChange}: DragNumIn
     }, [value]);
 
     return (
-        <input
-            className="drag-num-input"
-            type="text"
-            name={name}
-            value={val}
-            onChange={handleChange}
-            onMouseDown={mouseDown}
-            onMouseMove={mouseMove}
-            onMouseUp={mouseUp}
-            onMouseOut={mouseOut}
-        />
+        <div className="drag-num-input__wrapper">
+            <TextInput
+                className={`drag-num-input__input ${disableTyping && "drag-num-input__input_transparent-selection"}`}
+                name={name}
+                value={val}
+                readOnly={true}
+                onChange={handleChange}
+                onMouseDown={mouseDown}
+                onMouseMove={mouseMove}
+                onMouseUp={mouseUp}
+                onMouseOut={mouseOut}
+            />
+        </div>
     )
 };
 

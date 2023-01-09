@@ -1,0 +1,14 @@
+.drag-num-input__input
+{
+    cursor: grab;
+}
+
+.drag-num-input__input_transparent-selection::selection
+{
+    background: transparent;
+}
+
+.drag-num-input__wrapper
+{
+    width: calc(50% - var(--properties-editor-gap));
+}

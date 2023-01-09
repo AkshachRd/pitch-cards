@@ -1,0 +1,287 @@
+.text-input__input
+{
+    z-index: 2;
+    color: var(--text-color);
+    border: none;
+    background: transparent;
+    font: 24px/normal sans-serif;
+    text-align: center;
+    padding: 30px 0 16px;
+    width: 100%;
+    height: 24px;
+    position: relative;
+}
+
+.text-input__input:focus
+{
+    outline: none;
+}
+
+.text-input__label
+{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    outline: none;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    background-color: var(--input-bg);
+    position: relative;
+    border-radius: var(--border-radius);
+    display: block;
+}
+
+.text-input__label:hover
+{
+    background-color: var(--input-bg-accent);
+}
+
+.text-input__label:hover .text-input__name
+{
+    color: var(--text-focus-color);
+}
+
+.text-input__label:hover .text-input__input
+{
+    color: var(--text-focus-color);
+}
+
+.text-input__input:focus
+{
+    background-color: var(--input-bg-focus);
+    border-radius: var(--border-radius);
+
+    color: var(--text-focus-color);
+}
+
+.text-input__input:focus + .text-input__name
+{
+    z-index: 10;
+    color: var(--text-focus-color);
+}
+
+.text-input__name
+{
+    position: absolute;
+    color: var(--text-color);
+
+    top: 5px;
+    left: 5px;
+    text-align: left;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.color-input__input
+{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+    width: 50%;
+    height: 24px;
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+.color-input__label
+{
+    position: relative;
+    width: calc(50% - var(--properties-editor-gap));
+    height: 70px;
+    background-color: var(--input-bg);
+    border-radius: var(--border-radius);
+}
+
+.color-input__name
+{
+    position: absolute;
+    color: var(--text-color);
+
+    top: 5px;
+    left: 5px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.color-input__input:focus{
+    border-radius: 0;
+    outline: none;
+}
+
+.color-input__input::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.color-input__input::-webkit-color-swatch{
+    border: 0;
+    border-radius: 0;
+}
+
+.color-input__input::-moz-color-swatch,
+.color-input__input::-moz-focus-inner{
+    border: 0;
+}
+
+.color-input__input::-moz-focus-inner{
+    padding: 0;
+}
+
+.color-input__label:hover
+{
+    background-color: var(--input-bg-accent);
+}
+
+.color-input__label:hover .color-input__name
+{
+    color: var(--text-focus-color);
+}
+
+.color-input__label:hover .color-input__input
+{
+    color: var(--text-focus-color);
+}
+
+.select__container
+{
+    position: relative;
+    width: calc(50% - var(--properties-editor-gap));
+    height: 70px;
+    background-color: var(--input-bg);
+    border-radius: var(--border-radius);
+}
+
+.select__name
+{
+    position: absolute;
+    color: var(--text-color);
+    top: 5px;
+    left: 5px;
+    text-align: left;
+    white-space: nowrap;
+    z-index: 1;
+    cursor: default;
+}
+
+.select__element
+{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    background: var(--input-bg-focus);
+    color: black;
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 0;
+    border-radius: var(--border-radius);
+    width: 80%;
+    height: 40%;
+    text-align: center;
+}
+
+.select__container:hover
+{
+    background-color: var(--input-bg-accent);
+}
+
+.select__container:hover .select__name
+{
+    color: var(--text-focus-color);
+}
+
+.select__container:hover .select__element
+{
+    color: var(--text-focus-color);
+}
+
+.font-style-input__wrapper
+{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    width: calc(50% - var(--properties-editor-gap));
+    height: 70px;
+    background-color: var(--input-bg);
+    border-radius: var(--border-radius);
+}
+
+.font-style-input__btn
+{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    border: 0;
+    width: 50%;
+    height: 100%;
+    cursor: pointer;
+    color: var(--text-color);
+    background-color: var(--input-bg-accent);
+}
+
+.font-style-input__btn_active
+{
+    background-color: var(--input-bg-focus);
+}
+
+.font-style-input__weight-btn
+{
+    font-weight: bold;
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.font-style-input__style-btn
+{
+    font-style: italic;
+    border-bottom-left-radius: var(--border-radius);
+}
+
+.font-style-input__container
+{
+    width: 100%;
+    height: 50%;
+}
+
+.font-style-input__name
+{
+    position: absolute;
+    color: var(--text-color);
+    top: 5px;
+    left: 5px;
+    text-align: left;
+    white-space: nowrap;
+    z-index: 1;
+    cursor: default;
+}
+
+.font-style-input__btn:hover
+{
+    color: var(--text-focus-color);
+    background-color: var(--input-bg-focus);
+}
