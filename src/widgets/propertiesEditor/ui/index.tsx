@@ -1,5 +1,5 @@
 import CanvasObjectPropertiesEditor from "./canvasObjectPropertiesEditor";
-import {useAppSelector} from "shared/hooks";
+import {useAppSelector} from "shared/hooks/redux";
 import {selectCanvasObjectsState} from "widgets/canvas/model/canvasObjectsSlice";
 import CanvasPropertiesEditor from "./canvasPropertiesEditor";
 import "./styles.scss";

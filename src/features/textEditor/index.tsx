@@ -1,5 +1,5 @@
 import {SyntheticEvent} from "react";
-import {useAppDispatch, useAppSelector} from "shared/hooks";
+import {useAppDispatch, useAppSelector} from "shared/hooks/redux";
 import {createText} from "shared/lib/canvas";
 import {FontFamily, FontStyle, FontWeight} from "shared/types";
 import {v4 as uuid4v} from "uuid";

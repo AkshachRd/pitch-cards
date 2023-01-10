@@ -1,7 +1,7 @@
 import {CanvasObject} from "shared/types";
 import DragNumInput from "features/dragNumInput";
 import {useEffect, useState} from "react";
-import {useAppDispatch} from "shared/hooks";
+import {useAppDispatch} from "shared/hooks/redux";
 import {editCoords, resize} from "widgets/canvas/model/canvasObjectsSlice";
 import ArtObjectPropertiesEditor from "./artObjectPropertiesEditor";
 import TextObjectPropertiesEditor from "./textObjectPropertiesEditor";

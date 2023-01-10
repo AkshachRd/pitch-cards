@@ -1,6 +1,6 @@
 import {MouseEvent, useReducer, useState} from "react";
 import {CanvasObject} from "shared/types";
-import {useAppDispatch} from "shared/hooks";
+import {useAppDispatch} from "shared/hooks/redux";
 import {changeScale, editCoords, resize} from "../model/canvasObjectsSlice";
 import {isMouseInCorner} from "shared/lib/canvas";
 

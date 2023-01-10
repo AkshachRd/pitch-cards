@@ -1,6 +1,6 @@
 import {MouseEvent, useCallback, useReducer, useState} from "react";
 import {CanvasObject, Coords} from "shared/types";
-import {useAppDispatch} from "shared/hooks";
+import {useAppDispatch} from "shared/hooks/redux";
 import {editCoords} from "../model/canvasObjectsSlice";
 import {isMouseInRect, isMouseInRectCorner} from "shared/lib/canvas";
 import {findLast} from "shared/lib";

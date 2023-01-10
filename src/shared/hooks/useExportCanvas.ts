@@ -1,4 +1,4 @@
-import {useAppDispatch} from "shared/hooks";
+import {useAppDispatch} from "shared/hooks/redux";
 import {deselectAll} from "widgets/canvas/model/canvasObjectsSlice";
 import {downloadImage, exportAsPng} from "shared/lib";
 import {clear} from "widgets/canvas/model/selectionSlice";

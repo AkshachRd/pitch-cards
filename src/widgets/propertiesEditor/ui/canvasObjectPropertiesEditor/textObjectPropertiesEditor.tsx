@@ -9,7 +9,7 @@ import {
     changeFontStyle,
     changeFontWeight
 } from "widgets/canvas/model/canvasObjectsSlice";
-import {useAppDispatch} from "shared/hooks";
+import {useAppDispatch} from "shared/hooks/redux";
 import TextInput from "entities/PropertiesInputs/ui/textInput";
 import ColorInput from "entities/PropertiesInputs/ui/colorInput";
 import Select from "entities/PropertiesInputs/ui/select";

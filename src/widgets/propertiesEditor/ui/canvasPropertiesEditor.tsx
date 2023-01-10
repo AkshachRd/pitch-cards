@@ -1,5 +1,5 @@
 import DragNumInput from "features/dragNumInput";
-import {useAppDispatch, useAppSelector} from "shared/hooks";
+import {useAppDispatch, useAppSelector} from "shared/hooks/redux";
 import {changeFilter, changeTitle, resize, selectCanvasState} from "widgets/canvas/model/canvasSlice";
 import {ChangeEvent, useEffect, useState} from "react";
 import {Filters} from "shared/types";

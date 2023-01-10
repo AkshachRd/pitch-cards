@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {ArtObject} from "shared/types";
 import {changeColor} from "widgets/canvas/model/canvasObjectsSlice";
-import {useAppDispatch} from "shared/hooks";
+import {useAppDispatch} from "shared/hooks/redux";
 import ColorInput from "entities/PropertiesInputs/ui/colorInput";
 
 interface ArtObjectPropertiesEditorProps

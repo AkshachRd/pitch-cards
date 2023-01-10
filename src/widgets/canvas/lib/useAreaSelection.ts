@@ -1,5 +1,5 @@
 import {CanvasObject} from "shared/types";
-import {useAppDispatch, useAppSelector} from "shared/hooks";
+import {useAppDispatch, useAppSelector} from "shared/hooks/redux";
 import {MouseEvent, useState, useReducer} from "react";
 import { clear, changeCoords, resize, selectSelection } from "../model/selectionSlice";
 import {select, deselect} from "../model/canvasObjectsSlice";

@@ -1,7 +1,6 @@
 import DropdownMenu from "entities/dropdownMenu";
 import DropdownMenuItem from "entities/dropdownMenuItem";
 import "./styles.css";
-import {useAppDispatch, useAppSelector, useModal} from "shared/hooks";
 import {selectCanvasState} from "widgets/canvas/model/canvasSlice";
 import ImageUploader from "../imageUploader/ui";
 import {
@@ -14,12 +13,12 @@ import {
 } from "widgets/canvas/model/canvasObjectsSlice";
 import {memo} from "react";
 import {CanvasObject} from "shared/types";
-import {useExportCanvas} from "./lib";
+import {useExportCanvas, useModal, useAppDispatch, useAppSelector} from "shared/hooks";
 import {redo, selectHistory, undo} from "shared/history";
 import TextEditor from "../textEditor";
-import {createEllipse, createRect, createTriangle} from "../../shared/lib";
+import {createEllipse, createRect, createTriangle} from "shared/lib";
 import {v4 as uuid4v} from "uuid";
-import Icons, {IconNames} from "../../shared/icons";
+import Icons, {IconNames} from "shared/icons";
 
 interface SubMenuProps {
     selectedObjs: Array<CanvasObject>;

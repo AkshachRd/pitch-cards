@@ -7,7 +7,7 @@ import {
     drawSelectionLines,
     replaceElementsById
 } from "../lib";
-import {useAppDispatch, useAppSelector} from "shared/hooks";
+import {useAppDispatch, useAppSelector} from "shared/hooks/redux";
 import {selectCanvasState} from "../model/canvasSlice";
 import useDragNDrop from "../lib/useDragAndDrop";
 import "./styles.scss";

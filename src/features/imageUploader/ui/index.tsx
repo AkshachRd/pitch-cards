@@ -1,5 +1,5 @@
 import {MouseEvent, ChangeEvent, useState, useReducer} from "react";
-import { useAppDispatch, useAppSelector } from "shared/hooks";
+import { useAppDispatch, useAppSelector } from "shared/hooks/redux";
 import { createImage } from "shared/lib/canvas";
 import {resize, selectCanvasSize} from "widgets/canvas/model/canvasSlice";
 import {v4 as uuid4v} from "uuid";
