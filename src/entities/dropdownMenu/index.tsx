@@ -1,20 +1,21 @@
-import {ReactNode, useEffect, useRef, useState} from "react";
-import "./styles.css";
+import {forwardRef, ReactNode, Ref, useEffect, useRef, useState} from "react";
+import "./styles.scss";
 
 interface DropdownMenuProps {
     title: string;
+    className?: string;
     children?: ReactNode;
 }
 
-const DropdownMenu = ({title, children}: DropdownMenuProps) => {
+const DropdownMenu = forwardRef(function DropdownMenu({title, className, children}: DropdownMenuProps, ref: Ref<HTMLDivElement>) {
     const [isClosed, setIsClosed] = useState(true);
     const dropdownMenuRef = useRef<HTMLDivElement>(null);
+    ref = dropdownMenuRef;
     const dropdownMenuTitleRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handler = (e: MouseEvent | TouchEvent) => {
-             if (!isClosed && dropdownMenuRef.current && !dropdownMenuRef.current.contains(e.target as Node))
-             {
+             if (!isClosed && dropdownMenuRef.current && !dropdownMenuRef.current.contains(e.target as Node)) {
                  setIsClosed(true);
              }
         };
@@ -29,19 +30,29 @@ const DropdownMenu = ({title, children}: DropdownMenuProps) => {
 
     return (
         <div
-            className="dropdown-menu"
+            className={`dropdown-menu ${className}`}
             ref={dropdownMenuRef}
             onMouseEnter={() => setIsClosed(false)}
-            onMouseLeave={() => setIsClosed(true)}
         >
             <div className="dropdown-menu__title" ref={dropdownMenuTitleRef}>{title}</div>
             {!isClosed &&
-                <ul className="dropdown-menu__list">
-                    {children}
-                </ul>
+                <div className="dropdown-menu__list">
+                    <div
+                        className="dropdown-menu__padding"
+                        style={{width: dropdownMenuRef.current?.clientWidth}}
+                        onMouseEnter={() => setIsClosed(false)}
+                        onMouseLeave={() => setIsClosed(true)}
+                    />
+                    <ul className="dropdown-menu__list_1"
+                        onMouseEnter={() => setIsClosed(false)}
+                        onMouseLeave={() => setIsClosed(true)}
+                    >
+                        {children}
+                    </ul>
+                </div>
             }
         </div>
     )
-};
+});
 
 export default DropdownMenu;

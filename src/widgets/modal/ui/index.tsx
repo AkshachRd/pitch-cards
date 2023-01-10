@@ -10,7 +10,7 @@ interface ModalProps {
 const Modal = ({modal, unsetModal}: ModalProps) => {
     useEffect(() => {
         const bind = (e: KeyboardEvent) => {
-            if (e.key !== "Escape") {
+            if (e.key === "Escape") {
                 unsetModal();
             }
         };

@@ -1,6 +1,6 @@
 import {
     ArtObject,
-    CanvasObjectTypes,
+    CanvasObjectTypes, Coords,
     FontFamily,
     FontStyle,
     FontWeight,
@@ -11,47 +11,47 @@ import {
 import {getCanvasFont} from "./getCanvasFont";
 import {getTextSize} from "./getTextSize";
 
-export const createRect = (id: string): ArtObject => {
+export const createRect = (id: string, {x, y}: Coords): ArtObject => {
     return {
         id: id,
         type: CanvasObjectTypes.ArtObject,
-        x: 0,
-        y: 0,
+        x: x - 25,
+        y: y - 25,
         width: 50,
         height: 50,
         selected: false,
         scale: {x: 1, y: 1},
-        color: "green",
+        color: "#e8b30e",
         shape: Shapes.Rectangle
     };
 };
 
-export const createEllipse = (id: string): ArtObject => {
+export const createEllipse = (id: string, {x, y}: Coords): ArtObject => {
     return {
         id: id,
         type: CanvasObjectTypes.ArtObject,
-        x: 0,
-        y: 0,
+        x: x - 25,
+        y: y - 25,
         width: 50,
         height: 50,
         selected: false,
         scale: {x: 1, y: 1},
-        color: "green",
+        color: "#e8b30e",
         shape: Shapes.Ellipse
     };
 };
 
-export const createTriangle = (id: string): ArtObject => {
+export const createTriangle = (id: string, {x, y}: Coords): ArtObject => {
     return {
         id: id,
         type: CanvasObjectTypes.ArtObject,
-        x: 0,
-        y: 0,
+        x: x - 25,
+        y: y - 25,
         width: 50,
         height: 50,
         selected: false,
         scale: {x: 1, y: 1},
-        color: "green",
+        color: "#e8b30e",
         shape: Shapes.Triangle
     };
 };
@@ -71,7 +71,8 @@ export const createImage = (id: string, width: number, height: number, source: s
 }
 
 export const createText = (
-    id: string,  
+    id: string,
+    {x, y}: Coords,
     content: string, 
     fontFamily: FontFamily, 
     fontSize: number, 
@@ -84,8 +85,8 @@ export const createText = (
     return {
         id: id,
         type: CanvasObjectTypes.Text,
-        x: 0,
-        y: 0,
+        x: x - Math.ceil((width + 10) / 2),
+        y: y - Math.ceil((height + 10) / 2),
         width: Math.ceil(width) + 10,
         height: Math.ceil(height) + 10,
         selected: false,

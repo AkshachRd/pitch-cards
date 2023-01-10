@@ -1,5 +1,5 @@
 import {ReactNode} from "react";
-import "./styles.css";
+import "./styles.scss";
 
 interface DropdownMenuItemProps {
     leftIcon?: ReactNode;
@@ -14,9 +14,9 @@ const DropdownMenuItem = ({leftIcon, rightIcon, children, onClick, disabled}: Dr
         <li className={`dropdown-menu__item ${disabled ? "dropdown-menu__item_disabled" : " "}`}
             onClick={() => onClick && !disabled && onClick()}
         >
-            <span>{leftIcon}</span>
+            {leftIcon && <span className="dropdown-menu__left-icon">{leftIcon}</span>}
             {children}
-            <span>{rightIcon}</span>
+            {rightIcon && <span className="dropdown-menu__right-icon">{rightIcon}</span>}
         </li>
     )
 };

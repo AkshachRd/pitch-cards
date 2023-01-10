@@ -6,10 +6,14 @@ import "./styles.scss";
 
 export const PropertiesEditor = () => {
     const objs = useAppSelector(selectCanvasObjectsState);
-    const selectedObj = objs.filter((obj) => obj.selected)[0];
+    const selectedObjs = objs.filter((obj) => obj.selected);
     return (
         <div className="properties-editor">
-            {selectedObj ? <CanvasObjectPropertiesEditor selectedObj={selectedObj}/> : <CanvasPropertiesEditor/>}
+            {selectedObjs.length !== 1 ?
+                <CanvasPropertiesEditor/>
+                :
+                <CanvasObjectPropertiesEditor selectedObj={selectedObjs[0]}/>
+            }
         </div>
     );
 };

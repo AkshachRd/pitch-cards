@@ -1,12 +1,18 @@
 import {SyntheticEvent} from "react";
-import {useAppDispatch} from "shared/hooks";
+import {useAppDispatch, useAppSelector} from "shared/hooks";
 import {createText} from "shared/lib/canvas";
 import {FontFamily, FontStyle, FontWeight} from "shared/types";
 import {v4 as uuid4v} from "uuid";
 import {add} from "widgets/canvas/model/canvasObjectsSlice";
 import {getFontFamilyName} from "shared/lib";
+import {selectCanvasSize} from "widgets/canvas/model/canvasSlice";
 
-const TextEditor = () => {
+interface TextEditorProps {
+    toggle?: () => void;
+}
+
+const TextEditor = ({toggle}: TextEditorProps) => {
+    const {width: canvasWidth, height: canvasHeight} = useAppSelector(selectCanvasSize);
     const dispatch = useAppDispatch();
 
     const submitText = (e: SyntheticEvent) => {
@@ -27,8 +33,12 @@ const TextEditor = () => {
         const fontStyle = target.fontStyle.value;
         const fontWeight = target.fontWeight.value;
 
-        const textObj = createText(uuid4v(), content, fontFamily, fontSize, color, fontStyle, fontWeight);
+        const textObj = createText(uuid4v(), {
+            x: Math.floor(canvasWidth / 2),
+            y: Math.floor(canvasHeight / 2)
+        }, content, fontFamily, fontSize, color, fontStyle, fontWeight);
         dispatch(add(textObj));
+        toggle && toggle();
     };
 
     return (
