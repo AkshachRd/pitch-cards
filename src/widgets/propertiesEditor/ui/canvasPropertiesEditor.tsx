@@ -50,18 +50,20 @@ const CanvasPropertiesEditor = () => {
                     minValue={100}
                     onChange={(height) => setSize((prev) => ({...prev, height}))}
                 />
-                <Select name="Filter" value={filter} onChange={handleFilterChange}>
-                    {Object.entries(Filters).map(([filterName, filterValue]) => {
-                        return (
-                            <option
-                                key={filterName}
-                                value={filterValue}
-                            >
-                                {filterName}
-                            </option>
-                        )
-                    })}
-                </Select>
+                <div>
+                    <Select name="Filter" value={filter} onChange={handleFilterChange}>
+                        {Object.entries(Filters).map(([filterName, filterValue]) => {
+                            return (
+                                <option
+                                    key={filterName}
+                                    value={filterValue}
+                                >
+                                    {filterName}
+                                </option>
+                            )
+                        })}
+                    </Select>
+                </div>
             </div>
         </>
     )

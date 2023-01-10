@@ -9,10 +9,14 @@ const App = () => {
     return (
         <div className="App">
             <Header/>
-            <div className="App__container">
-                <Canvas/>
-                <PropertiesEditor/>
+            <div className="App__container-wrapper">
+
+                <div className="App__container">
+                    <Canvas/>
+                    <PropertiesEditor/>
+                </div>
             </div>
+
         </div>
     )
 }

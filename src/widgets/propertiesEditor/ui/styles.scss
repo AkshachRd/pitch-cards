@@ -1,16 +1,21 @@
 .properties-editor
 {
     width: var(--properties-editor-width);
+    min-width: var(--properties-editor-width);
     background-color: var(--bg);
+    padding: 0 var(--properties-editor-gap);
 }
 
 .properties-editor__inputs
 {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: var(--properties-editor-gap);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: var(--properties-editor-gap);
+    //display: flex;
+    //flex-direction: row;
+    //justify-content: flex-start;
+    //flex-wrap: wrap;
+    //gap: var(--properties-editor-gap);
 }
 
 .properties-editor__title

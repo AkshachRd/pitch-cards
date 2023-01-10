@@ -73,7 +73,7 @@ const DragNumInput = ({minValue, value, name, defaultValue, onChange}: DragNumIn
     }, [value]);
 
     return (
-        <div className="drag-num-input__wrapper">
+        <div>
             <TextInput
                 className={`drag-num-input__input ${disableTyping && "drag-num-input__input_transparent-selection"}`}
                 name={name}

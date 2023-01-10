@@ -10,7 +10,7 @@ import {
 import {useAppDispatch, useAppSelector} from "shared/hooks";
 import {selectCanvasState} from "../model/canvasSlice";
 import useDragNDrop from "../lib/useDragAndDrop";
-import "./styles.css";
+import "./styles.scss";
 import useResize from "../lib/useResize";
 import useAreaSelection from "../lib/useAreaSelection";
 import {selectCanvasObjectsState} from "../model/canvasObjectsSlice";
@@ -76,6 +76,10 @@ export const Canvas = () => {
     }, [disabledRedo, disabledUndo, dispatch]);
 
     useEffect(() => {
+        canvasRef.current?.scrollIntoView({behavior: "smooth"});
+    }, []);
+
+    useEffect(() => {
         document.addEventListener("keydown", handleKeyPress);
         return () => {
             document.removeEventListener("keydown", handleKeyPress);
@@ -94,7 +98,7 @@ export const Canvas = () => {
         //drawSkeletons(context, skeletonsDragNDrop);
         drawSelectionLines(context, selection);
         applyFilter(context, filter, 0.7);
-    }, [canvasObjects, selection, filter, skeletonsDragNDrop]);
+    }, [canvasObjects, selection, filter, skeletonsDragNDrop, canvasWidth, canvasHeight]);
 
     return (
         <div className="canvas-wrapper">
