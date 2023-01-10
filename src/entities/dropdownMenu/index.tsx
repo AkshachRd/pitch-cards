@@ -43,7 +43,7 @@ const DropdownMenu = forwardRef(function DropdownMenu({title, className, childre
                         onMouseEnter={() => setIsClosed(false)}
                         onMouseLeave={() => setIsClosed(true)}
                     />
-                    <ul className="dropdown-menu__list_1"
+                    <ul className="dropdown-menu__inner-list"
                         onMouseEnter={() => setIsClosed(false)}
                         onMouseLeave={() => setIsClosed(true)}
                     >
