@@ -1,7 +1,7 @@
 import {FontFamily, FontWeight, FontStyle, TextObject} from "shared/types";
 import {getFontFamilyName, isFontFamily} from "shared/lib";
 import DragNumInput from "features/dragNumInput";
-import {ChangeEvent, useEffect, useReducer, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import {
     changeColor, changeContent,
     changeFontFamily,
@@ -26,21 +26,49 @@ const TextObjectPropertiesEditor = ({textObj}: TextObjectPropertiesEditorProps) 
     const [content, setContent] = useState(textObj.content);
     const [fontFamily, setFontFamily] = useState(textObj.fontFamily);
     const [fontSize, setFontSize] = useState(textObj.fontSize);
-    const [fontStyle, toggleFontStyle] = useReducer<(fontStyle: FontStyle) => FontStyle>((fontStyle: FontStyle) => {
+    const [fontStyle, setFontStyle] = useState(textObj.fontStyle);
+    const toggleFontStyle = () => {
         if (fontStyle === FontStyle.Normal) {
-            return FontStyle.Italic;
+            setFontStyle(FontStyle.Italic);
+            return;
         }
-        return FontStyle.Normal;
-    }, textObj.fontStyle);
-    const [fontWeight, toggleFontWeight] = useReducer((fontWeight) => {
+        setFontStyle(FontStyle.Normal);
+    };
+    const [fontWeight, setFontWeight] = useState(textObj.fontWeight);
+    const toggleFontWeight = () => {
         if (fontWeight === FontWeight.Normal) {
-            return FontWeight.Bold;
+            setFontWeight(FontWeight.Bold);
+            return;
         }
-        return FontWeight.Normal;
-    }, textObj.fontWeight);
+        setFontWeight(FontWeight.Normal);
+    };
     const [color, setColor] = useState(textObj.color);
 
     const id = textObj.id;
+
+    useEffect(() => {
+        setContent(textObj.content);
+    }, [textObj.content]);
+
+    useEffect(() => {
+        setFontFamily(textObj.fontFamily);
+    }, [textObj.fontFamily]);
+
+    useEffect(() => {
+        setFontSize(textObj.fontSize);
+    }, [textObj.fontSize]);
+
+    useEffect(() => {
+        setColor(textObj.color);
+    }, [textObj.color]);
+
+    useEffect(() => {
+        setFontWeight(textObj.fontWeight);
+    }, [textObj.fontWeight]);
+
+    useEffect(() => {
+        setFontStyle(textObj.fontStyle);
+    }, [textObj.fontStyle]);
 
     useEffect(() => {
         dispatch(changeColor({id, color}))
@@ -101,7 +129,7 @@ const TextObjectPropertiesEditor = ({textObj}: TextObjectPropertiesEditorProps) 
                 onWeightToggle={toggleFontWeight}
                 isBald={fontWeight === FontWeight.Bold}
             />
-            <ColorInput name="Color" onChange={(e) => setColor(e.target.value)}/>
+            <ColorInput name="Color" value={color} onChange={(e) => setColor(e.target.value)}/>
         </>
     );
 };

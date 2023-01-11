@@ -15,7 +15,7 @@ import useResize from "../lib/useResize";
 import useAreaSelection from "../lib/useAreaSelection";
 import {selectCanvasObjectsState} from "../model/canvasObjectsSlice";
 import {selectSelection} from "../model/selectionSlice";
-import {redo, selectHistory, undo} from "shared/history";
+import {redo, selectHistoryState, undo} from "shared/history";
 
 export const Canvas = () => {
     const dispatch = useAppDispatch();
@@ -23,7 +23,7 @@ export const Canvas = () => {
     const canvasObjects = useAppSelector(selectCanvasObjectsState);
     const selection = useAppSelector(selectSelection);
     const {width: canvasWidth, height: canvasHeight, filter} = useAppSelector(selectCanvasState);
-    const {past, future} = useAppSelector(selectHistory);
+    const {past, future} = useAppSelector(selectHistoryState);
     const [
         skeletonsDragNDrop,
         mouseDownDragNDrop,

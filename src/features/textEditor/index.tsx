@@ -45,7 +45,7 @@ const TextEditor = ({toggle}: TextEditorProps) => {
         <>
             <form onSubmit={submitText}>
                 <input type="text" name="content"/>
-                <input type="color" name="color"/>
+                <input type="color" name="color" defaultValue={"#FF0000"}/>
                 <select name="fontFamily">
                     {Object.values(FontFamily).map((fontFamily) => {
                         const fontName = getFontFamilyName(fontFamily);

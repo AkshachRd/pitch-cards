@@ -22,8 +22,9 @@ const Modal = ({modal, unsetModal}: ModalProps) => {
     }, [modal, unsetModal]);
 
     const closeBtnSize = 25;
+    const closeBtnShift = 20;
     const closeBtnStyle = {
-        left: `calc(100% - 20px - ${closeBtnSize}px)`,
+        left: `calc(100% - ${closeBtnShift}px - ${closeBtnSize}px)`,
     };
 
     return (

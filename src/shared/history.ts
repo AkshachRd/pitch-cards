@@ -1,5 +1,6 @@
-import {createAction, Reducer, AnyAction} from "@reduxjs/toolkit";
-import {RootState} from "../app/store";
+import {createAction, nanoid, Reducer, AnyAction} from "@reduxjs/toolkit";
+import {DocState, RootState} from "app/store";
+import {Filters} from "./types";
 
 type HistoryState<S> = {
     past: Array<S>;
@@ -9,17 +10,25 @@ type HistoryState<S> = {
 
 export const undo = createAction("history/undo");
 export const redo = createAction("history/redo");
+export const openDocument = createAction("history/openDocument", function prepare(doc: DocState) {
+    return {
+        payload: {
+            doc,
+            id: nanoid(),
+            createdAt: new Date().toISOString(),
+        }
+    };
+});
+export const newDocument = createAction("history/newDocument");
 
-const undoable = <S, A extends AnyAction>(reducer: Reducer<S, A>) => {
+const undoable = <S>(reducer: Reducer<S, AnyAction>) => {
     const initialState: HistoryState<S> = {
         past: [],
-        // TODO: разрешить проблему с ts-ignore
-        // @ts-ignore
         present: reducer(undefined, {type: undefined}),
         future: []
     };
 
-    return function (state = initialState, action: A) {
+    return function (state = initialState, action: AnyAction) {
         const { past, present, future } = state;
 
         switch (action.type) {
@@ -41,6 +50,26 @@ const undoable = <S, A extends AnyAction>(reducer: Reducer<S, A>) => {
                     present: next,
                     future: newFuture
                 }
+            case openDocument.type:
+                return {
+                    past: [],
+                    present: action.payload.doc,
+                    future: []
+                }
+            case newDocument.type:
+                return {
+                    past: [],
+                    present: {
+                        canvas: {
+                            title: "New Card",
+                            filter: Filters.None,
+                            width: Number(process.env.REACT_APP_CANVAS_WIDTH),
+                            height: Number(process.env.REACT_APP_CANVAS_HEIGHT),
+                        },
+                        canvasObjects: [],
+                    },
+                    future: [],
+                }
             default:
                 const newPresent = reducer(present, action);
 
@@ -57,5 +86,6 @@ const undoable = <S, A extends AnyAction>(reducer: Reducer<S, A>) => {
     }
 };
 
-export const selectHistory = (state: RootState) => state.history;
+export const selectHistoryState = (state: RootState) => state.history;
+export const selectHistoryPresentState = (state: RootState) => state.history.present;
 export default undoable;

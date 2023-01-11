@@ -4,6 +4,12 @@ import selectionReducer from 'widgets/canvas/model/selectionSlice';
 import canvasObjectsReducer from "widgets/canvas/model/canvasObjectsSlice";
 import undoable from "shared/history";
 
+const doc = combineReducers({
+  canvas: canvasReducer,
+  canvasObjects: canvasObjectsReducer
+});
+export type DocState = ReturnType<typeof doc>;
+
 export const store = configureStore({
   reducer: {
     history: undoable(combineReducers({
